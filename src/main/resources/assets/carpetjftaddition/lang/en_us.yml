@@ -1,0 +1,30 @@
+carpetjftaddition:
+  carpet_translations:
+    rule:
+      channelingWeather:
+        name: channelingWeather
+        desc: Controls weather conditions for Channeling enchantment
+      channelingCanSeeSky:
+        name: channelingCanSeeSky
+        desc: Controls whether Channeling enchantment check if it can see key
+      riptideTouchingWater:
+        name: riptideTouchingWater
+        desc: Controls whether Riptide check if players are touching water
+      drownReinforcementCanSpawnZombie:
+        name: drownReinforcementCanSpawnZombie
+        desc: drownReinforcementCanSpawnZombie
+      drownSpawnHasEquipments:
+        name: drownSpawnHasEquipments
+        desc: drownSpawnHasEquipments
+      reinforcementAttributeInit:
+        name: reinforcementAttributeInit
+        desc: reinforcementAttributeInit
+      changeUseTridentTimeTicks:
+        name: changeUseTridentTimeTicks
+        desc: Change Using time(Game Ticks) of Trident
+      canPlayerPickUpLikeArrows:
+        name: canPlayerPickUpLikeArrows
+        desc: Control weather Player can pick up Like Arrows(Arrows, Trident, etc.) from Skeleton, Drowned, etc.
+      tridentMultipleDamage:
+        name: tridentMultipleDamage
+        desc: can trident lead to multiple damage
