@@ -3,28 +3,55 @@ carpetjftaddition:
     rule:
       channelingWeather:
         name: channelingWeather
-        desc: Controls weather conditions for Channeling enchantment
+        desc: Controls the weather requirement for Channeling enchantment on tridents
+        extra:
+          '0': "Note:" Useful for achievement farms, guardian farms, or head farms.
       channelingCanSeeSky:
         name: channelingCanSeeSky
-        desc: Controls whether Channeling enchantment check if it can see key
+        desc: Controls whether Channeling requires clear sky access
       riptideTouchingWater:
         name: riptideTouchingWater
-        desc: Controls whether Riptide check if players are touching water
-      drownReinforcementCanSpawnZombie:
-        name: drownReinforcementCanSpawnZombie
-        desc: drownReinforcementCanSpawnZombie
-      drownSpawnHasEquipments:
-        name: drownSpawnHasEquipments
-        desc: drownSpawnHasEquipments
+        desc: Controls whether Riptide requires player contact with water
+        extra:
+          '0': "Note:" Requires both client and server installation for proper functionality.
+          '1': Epic Riptide buff! (not really).
+      drownedReinforcementCanSpawnZombie:
+        name: drownedReinforcementCanSpawnZombie
+        desc: Makes drowned reinforcements spawn zombies instead of drowned
+      drownedSpawnHasEquipments:
+        name: drownedSpawnHasEquipments
+        desc: Adjusts probability of drowned spawning with equipment
+        extra:
+          '0': Range 0-1 (1 = always spawn with equipment)
+          '1': "Note:" Drowned may spawn with tridents or fishing rods.
       reinforcementAttributeInit:
         name: reinforcementAttributeInit
-        desc: reinforcementAttributeInit
+        desc: Modifies initial reinforcement capability for zombie-type mobs
+        extra:
+          '1': Range 0-1
+          '0': "Note:" Only affects newly spawned zombie-type mobs.
       changeUseTridentTimeTicks:
         name: changeUseTridentTimeTicks
-        desc: Change Using time(Game Ticks) of Trident
+        desc: Adjusts trident charge requirement in game ticks (gt). Default 10gt (0.5 seconds)
+        extra:
+          '0': Affects both throwable and Riptide tridents
+          '1': Animation is fixed at 10gt; additional charge time occurs after animation
+          '2': Combine with `riptideTouchingWater` rule for interesting effects
+          '3': Setting to `0` with `riptideTouchingWater=ANY` enables extreme speeds with elytra
+          '4': Avoid setting too low with Riptide to prevent terrain loading issues. Extreme speeds may cause server lag or crashes
       canPlayerPickUpLikeArrows:
         name: canPlayerPickUpLikeArrows
-        desc: Control weather Player can pick up Like Arrows(Arrows, Trident, etc.) from Skeleton, Drowned, etc.
+        desc: Allows players to collect arrow-type projectiles not from players.
+        extra:
+          '0': Players can collect arrows and tridents from skeletons and drowned.
+          '1': Trident collection requires the drowned to be defeated first.
       tridentMultipleDamage:
         name: tridentMultipleDamage
-        desc: can trident lead to multiple damage
+        desc: Reintroduces multi-hit and area damage from versions 25w41a-25w43a, reintroduces "fixed bugs" (wink).
+        extra:
+          '0': Java Edition players can now enjoy trident blender mechanics!
+      impalingWaterContact:
+        name: impalingWaterContact
+        desc: Modifies the Impaling enchantment to trigger bonus damage when the target entity is touching water, instead of requiring the target to be an aquatic mob.
+        extra:
+          '0': This change makes Impaling more versatile in aquatic combat scenarios.

@@ -7,7 +7,8 @@ import carpet.api.settings.Validators;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
 
-import static carpet.api.settings.RuleCategory.*;
+import static carpet.api.settings.RuleCategory.FEATURE;
+import static carpet.api.settings.RuleCategory.SURVIVAL;
 
 public class CarpetJFTSettings {
 
@@ -75,7 +76,7 @@ public class CarpetJFTSettings {
 
 
     @Rule(categories = {"JFT", SURVIVAL})
-    public static boolean drownReinforcementCanSpawnZombie = false;
+    public static boolean drownedReinforcementCanSpawnZombie = false;
 
 
     @Rule(  options = {"-1.0", "0", "0.5", "1.0"},
@@ -83,7 +84,7 @@ public class CarpetJFTSettings {
             validators = {jft_From0To1_Or_Neg1.class},
             categories = {SURVIVAL, "JFT"}
     )
-    public static double drownSpawnHasEquipments = -1.0;
+    public static double drownedSpawnHasEquipments = -1.0;
 
 
     @Rule(  options = {"-1.0", "0", "0.5", "1.0"},
@@ -100,5 +101,8 @@ public class CarpetJFTSettings {
 
     @Rule(categories = {"JFT", SURVIVAL, FEATURE})
     public static boolean tridentMultipleDamage = false;
+
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean impalingWaterContact = false;
 
 }

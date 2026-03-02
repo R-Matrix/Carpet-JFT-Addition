@@ -17,16 +17,16 @@ carpetjftaddition:
         name: 控制激流是否要求玩家接触水
         desc: 控制激流是否要求玩家接触水
         extra:
-          '0': 激流史诗级加强(bushi
+          '0': 激流史诗级加强! (bushi
           '1': 貌似需要客户端和服务端均安装该拓展才可正常使用
           '2': VANILLA - 原版表现, 即玩家必须接触水(触碰水或淋雨)
           '3': WATERRorLAVA - 碰水或碰岩浆均可使用
           '4': ANY - 无视任何条件均可使用激流
           '5': DISABLED - 禁止玩家使用激流三叉戟
-      drownReinforcementCanSpawnZombie:
+      drownedReinforcementCanSpawnZombie:
         name: 溺尸进行僵尸增援时生成僵尸而非溺尸
         desc: 溺尸进行僵尸增援时生成僵尸而非溺尸
-      drownSpawnHasEquipments:
+      drownedSpawnHasEquipments:
         name: 修改溺尸生成时携带装备的概率
         desc: 修改溺尸生成时携带装备的概率
         extra:
@@ -58,5 +58,11 @@ carpetjftaddition:
         name: 允许三叉戟多段攻击
         desc: 重新引入25w41a - 25w43a 的三叉戟帧伤和群伤
         extra:
-          '0': JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
+          '0': "JAVI"玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
           '1': 还有重新引入修复的`恶性bug`的(bushi
+      impalingWaterContact:
+        name: 穿刺接触水即可生效
+        desc: 修改穿刺附魔的效果触发条件，像基岩版那样, 从"仅对水生生物生效"改为"任何生物接触水即生效"
+        extra:
+          '0': 当目标实体接触水时，穿刺附魔即可造成额外伤害，使该附魔在水下战斗中更加实用. 穿刺V可打出21.5的伤害!
+          '1': 此规则改变了原版Java版中穿刺附魔仅对特定水生生物生效的限制，使其行为更接近某些自定义战斗场景的需求.

@@ -15,7 +15,7 @@ public abstract class drownedDamageMixin {
     @Redirect(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/ZombieEntity;getType()Lnet/minecraft/entity/EntityType;", ordinal = 0))
     private EntityType<? extends ZombieEntity> ChangeReinforcementOfDrowned(ZombieEntity instance){
 
-        return (instance.getType() == EntityType.DROWNED && CarpetJFTSettings.drownReinforcementCanSpawnZombie) ?
+        return (instance.getType() == EntityType.DROWNED && CarpetJFTSettings.drownedReinforcementCanSpawnZombie) ?
                 EntityType.ZOMBIE :
                 instance.getType();
     }
