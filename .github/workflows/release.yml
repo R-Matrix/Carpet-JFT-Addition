@@ -43,7 +43,7 @@ jobs:
           # 自动生成 release 标题和说明
           generate_release_notes: true
           # 可以自定义 release 名称，例如 "Release v1.0.0"
-          name: Release ${{ github.ref_name }}
+          name: Carpet JFT Addition ${{ github.ref_name }}
         env:
           # 使用 GitHub 自动提供的 token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

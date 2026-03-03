@@ -51,8 +51,6 @@ dependencies {
 	// Carpet mod!
 	modImplementation "carpet:fabric-carpet:${project.carpet_core_version}"
 
-	// MixinExtra Mod
-	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.2")))
 
 	implementation 'com.google.code.gson:gson:2.10.1'
 	implementation 'commons-io:commons-io:2.15.1'
