@@ -15,7 +15,6 @@
     "rules.impalingWaterContact.EnchantmentMixin",
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",
-    "rules.riptideTouchingWater.RiptideTouchingWaterMixin",
     "rules.tridentMultipleDamage.PersistentProjectileEntityApplyCollisionMixin"
   ],
   "injectors": {

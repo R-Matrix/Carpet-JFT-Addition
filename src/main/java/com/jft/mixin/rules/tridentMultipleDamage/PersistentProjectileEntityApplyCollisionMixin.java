@@ -1,12 +1,10 @@
 package com.jft.mixin.rules.tridentMultipleDamage;
 
 import com.jft.CarpetJFTSettings;
-import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.entity.Entity;
@@ -50,9 +48,9 @@ public abstract class PersistentProjectileEntityApplyCollisionMixin extends Proj
     }
 
 
-    @Definition(id = "entityHitResult", local = @Local(type = EntityHitResult.class))
-    @Expression("entityHitResult == null")
-    @ModifyExpressionValue(method = "applyCollision", at = @At("MIXINEXTRAS:EXPRESSION"))
+
+    @Expression("? == null")
+    @ModifyExpressionValue(method = "applyCollision", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
     private boolean se(boolean original, @Share("arrayList")LocalRef<ArrayList<EntityHitResult>> arrayListLocalRef){
 
         if(!CarpetJFTSettings.tridentMultipleDamage) return original;
