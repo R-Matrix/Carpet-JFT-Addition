@@ -1,6 +1,14 @@
 package com.jft.mixin.rules.tridentMultipleDamage;
 
 import com.jft.CarpetJFTSettings;
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ProjectileDeflection;
@@ -13,11 +21,9 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -29,44 +35,45 @@ public abstract class PersistentProjectileEntityApplyCollisionMixin extends Proj
         super(entityType, world);
     }
 
-    @Shadow
-    public byte getPierceLevel(){
-        return 0;
+
+    @ModifyVariable(method = "applyCollision", at = @At("LOAD"), ordinal = 0)
+    private EntityHitResult se(EntityHitResult original, BlockHitResult blockHitResult,
+                               @Share("arrayList")LocalRef<ArrayList<EntityHitResult>> arrayListLocalRef){
+
+        if(!CarpetJFTSettings.tridentMultipleDamage) return original;
+
+        Vec3d vec3d = this.getPos();
+        ArrayList<EntityHitResult> arrayList = new ArrayList<>(this.jft$collectPiercingCollisions(vec3d, blockHitResult.getPos()));
+        arrayList.sort(Comparator.comparingDouble((entityHitResultx) -> vec3d.squaredDistanceTo(entityHitResultx.getEntity().getPos())));
+        arrayListLocalRef.set(arrayList);
+        return arrayList.isEmpty() ? null : arrayList.getFirst();
     }
 
-    @Inject(method = "applyCollision", at = @At("HEAD"), cancellable = true)
-    private void TickInjectMixin(BlockHitResult blockHitResult, CallbackInfo ci){
-        if(CarpetJFTSettings.tridentMultipleDamage){
-            while (this.isAlive()) {
-                Vec3d vec3d = this.getPos();
-                ArrayList<EntityHitResult> arrayList = new ArrayList(this.jft$collectPiercingCollisions(vec3d, blockHitResult.getPos()));
-                arrayList.sort(Comparator.comparingDouble(entityHitResultx -> vec3d.squaredDistanceTo(entityHitResultx.getEntity().getPos())));
-                EntityHitResult entityHitResult = arrayList.isEmpty() ? null : (EntityHitResult) arrayList.getFirst();
-                Vec3d vec3d2 = ((HitResult) Objects.requireNonNullElse(entityHitResult, blockHitResult)).getPos();
-                this.setPosition(vec3d2);
-                this.tickBlockCollision(vec3d, vec3d2);
-                if (this.portalManager != null && this.portalManager.isInPortal()) {
-                    this.tickPortalTeleportation();
-                }
 
-                if (arrayList.isEmpty()) {
-                    if (this.isAlive() && blockHitResult.getType() != HitResult.Type.MISS) {
-                        this.hitOrDeflect(blockHitResult);
-                        this.velocityDirty = true;
-                    }
-                    break;
-                } else if (this.isAlive() && !this.noClip) {
-                    ProjectileDeflection projectileDeflection = this.jft$hitOrDeflect(arrayList);
-                    this.velocityDirty = true;
-                    if (this.getPierceLevel() > 0 && projectileDeflection == ProjectileDeflection.NONE) {
-                        continue;
-                    }
-                    break;
-                }
-            }
-            ci.cancel();
-        }
+    @Definition(id = "entityHitResult", local = @Local(type = EntityHitResult.class))
+    @Expression("entityHitResult == null")
+    @ModifyExpressionValue(method = "applyCollision", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private boolean se(boolean original, @Share("arrayList")LocalRef<ArrayList<EntityHitResult>> arrayListLocalRef){
+
+        if(!CarpetJFTSettings.tridentMultipleDamage) return original;
+
+        return arrayListLocalRef.get().isEmpty();
+
     }
+
+
+    @WrapOperation(method = "applyCollision", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;hitOrDeflect(Lnet/minecraft/util/hit/HitResult;)Lnet/minecraft/entity/ProjectileDeflection;",
+            ordinal = 1))
+    private ProjectileDeflection ser
+            (PersistentProjectileEntity instance, HitResult hitResult,
+             Operation<ProjectileDeflection> original, @Share("arrayList")LocalRef<ArrayList<EntityHitResult>> arrayListLocalRef){
+
+        if(!CarpetJFTSettings.tridentMultipleDamage) return original.call(instance, hitResult);
+
+        return this.jft$hitOrDeflect(arrayListLocalRef.get());
+    }
+
 
     @Unique
     private ProjectileDeflection jft$hitOrDeflect(Collection<EntityHitResult> hitResults) {
@@ -82,7 +89,7 @@ public abstract class PersistentProjectileEntityApplyCollisionMixin extends Proj
 
     @Unique
     private Collection<EntityHitResult> jft$collectPiercingCollisions(Vec3d vec3d, Vec3d vec3d2) {
-        return jft$collectPiercingCollisions(this.getEntityWorld(), this, vec3d, vec3d2, this.getBoundingBox().stretch(this.getVelocity()).expand((double)1.0F), this::canHit);
+        return jft$collectPiercingCollisions(this.getEntityWorld(), this, vec3d, vec3d2, this.getBoundingBox().stretch(this.getVelocity()).expand(1.0F), this::canHit);
     }
 
     @Unique
@@ -97,10 +104,10 @@ public abstract class PersistentProjectileEntityApplyCollisionMixin extends Proj
 
     @Unique
     private static Collection<EntityHitResult> jft$collectPiercingCollisions(World world, Entity entity, Vec3d from, Vec3d to, Box box, Predicate<Entity> hitPredicate, float hitboxMargin) {
-        List<EntityHitResult> list = new ArrayList();
+        List<EntityHitResult> list = new ArrayList<>();
 
         for(Entity entity2 : world.getOtherEntities(entity, box, hitPredicate)) {
-            Box box2 = entity2.getBoundingBox().expand((double)hitboxMargin);
+            Box box2 = entity2.getBoundingBox().expand(hitboxMargin);
             if (box2.contains(from)) {
                 list.add(new EntityHitResult(entity2, from));
             } else {
