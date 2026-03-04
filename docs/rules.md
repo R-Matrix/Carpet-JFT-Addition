@@ -7,6 +7,8 @@
 
 控制三叉戟引雷附魔的天气要求
 
+***没错, 这是第一个实现的规则***
+
 或许可以用在成就获取?远古守卫者农场?头颅农场?
 
 规则设置为 VANILLA  为原版表现  
@@ -69,7 +71,7 @@
 - 分类: `JFT`, `SURVIVAL`
 
 
-## 溺尸进行僵尸增援时生成僵尸而非溺尸 (drownReinforcementCanSpawnZombie)
+## 溺尸进行僵尸增援时生成僵尸而非溺尸 (drownedReinforcementCanSpawnZombie)
 
 设置溺尸进行僵尸增援时生成僵尸还是非溺尸
 
@@ -79,17 +81,7 @@
 - 分类: `JFT`, `SURVIVAL`
 
 
-## 溺尸进行僵尸增援时生成僵尸而非溺尸 (drownReinforcementCanSpawnZombie)
-
-设置溺尸进行僵尸增援时生成僵尸还是非溺尸
-
-- 类型: `boolean`
-- 默认值: `false`
-- 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`
-
-
-## 修改溺尸生成时携带装备的概率 (drownSpawnHasEquipments)
+## 修改溺尸生成时携带装备的概率 (drownedSpawnHasEquipments)
 
 修改溺尸生成时携带装备的概率
 
@@ -139,7 +131,7 @@ mc 版的草船借箭(
 
 JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 
-居然还能重新引入修复的==恶性bug==的(bushi
+~~居然还能重新引入修复的==恶性bug==的(bushi~~
 
 - 类型: `boolean`
 - 默认值: `false`
@@ -154,6 +146,20 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 当目标实体接触水时，穿刺附魔即可造成额外伤害，使该附魔在水下战斗中更加实用. 穿刺V可打出21.5的伤害!
 
 此规则改变了原版Java版中穿刺附魔仅对特定水生生物生效的限制，使其行为更接近某些自定义战斗场景的需求
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `JFT`, `SURVIVAL`
+
+
+## 海龟海带喂食与胎生繁殖机制 (turtleKelpFeedingAndViviparousBreeding)
+
+控制海龟是否可以通过喂食海带进行繁殖，并实现胎生机制而非产卵
+
+海龟现在可以通过喂食海带来繁殖
+
+繁殖后海龟会直接生下幼年海龟，而不是产下海龟蛋
 
 - 类型: `boolean`
 - 默认值: `false`

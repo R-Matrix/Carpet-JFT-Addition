@@ -3,6 +3,13 @@
 [![License](https://img.shields.io/github/license/shudpaa/Carpet-JFT-Addition)](https://choosealicense.com/licenses/mit/)
 [![Github](https://img.shields.io/github/downloads/shudpaa/Carpet-JFT-Addition/total?color=161616&label=Github%20downloads&logo=github)](https://github.com/shudpaa/Capet-JFT-Addition/releases)
 
+这只是一个为了三叉戟的 [Carpet mod](https://github.com/gnembon/fabric-carpet) (fabric-carpet) 扩展 mod，包含了不少~~NotVanilla~~的有意思的功能以及特性
+
+在默认配置条件下，本模组不会改变任何原版机制
+
+跟同 Minecraft 版本的 carpet mod 一起使用即可。尽可能地使用较新的 carpet mod
+
+
 ## 依赖
 
 | 名称                    | 类型 | 链接                                                                                                                                                                                    | 备注                                                        |

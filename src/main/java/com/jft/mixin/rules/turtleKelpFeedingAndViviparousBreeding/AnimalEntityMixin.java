@@ -1,4 +1,4 @@
-package com.jft.mixin;
+package com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -22,16 +22,16 @@ public abstract class AnimalEntityMixin extends PassiveEntity {
     }
 
     @Shadow
-    protected void eat(PlayerEntity player, Hand hand, ItemStack stack){}
+    protected abstract void eat(PlayerEntity player, Hand hand, ItemStack stack);
 
     @Shadow
-    public void lovePlayer(@Nullable PlayerEntity player){}
+    public abstract void lovePlayer(@Nullable PlayerEntity player);
 
     @Shadow
-    protected void playEatSound() {}
+    protected abstract void playEatSound();
 
     @Shadow
-    public boolean canEat(){return false;}
+    public abstract boolean canEat();
 
     @WrapMethod(method = "interactMob")
     protected ActionResult jft$interactMobHook(PlayerEntity player, Hand hand, Operation<ActionResult> original){

@@ -3,8 +3,6 @@
   "package": "com.jft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AnimalEntityMixin",
-    "TurtleMixin",
     "example.ExampleMixin",
     "rules.canPlayerPickUpLikeArrows.LikeArrowsPickUpTypeMixin",
     "rules.changeUseTridentTimeTicks.TridentItemUsingTimeMixin",
@@ -15,7 +13,11 @@
     "rules.impalingWaterContact.EnchantmentMixin",
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",
-    "rules.tridentMultipleDamage.PersistentProjectileEntityApplyCollisionMixin"
+    "rules.tridentMultipleDamage.PersistentProjectileEntityApplyCollisionMixin",
+    "rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityInvoker",
+    "rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin",
+    "rules.turtleKelpFeedingAndViviparousBreeding.TurtleEntityMixin",
+    "rules.turtleKelpFeedingAndViviparousBreeding.TurtleMateGoalMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -55,3 +55,9 @@ carpetjftaddition:
         desc: Modifies the Impaling enchantment to trigger bonus damage when the target entity is touching water, instead of requiring the target to be an aquatic mob.
         extra:
           '0': This change makes Impaling more versatile in aquatic combat scenarios.
+      turtleKelpFeedingAndViviparousBreeding:
+        name: turtleKelpFeedingAndViviparousBreeding
+        desc: Allows turtles to breed using kelp instead of seagrass, and enables viviparous reproduction.
+        extra:
+          '0': Turtles can now be bred by feeding them kelp instead of seagrass.
+          '1': Breeding results in live birth of baby turtles instead of laying eggs.

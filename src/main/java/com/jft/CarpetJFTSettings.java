@@ -105,4 +105,7 @@ public class CarpetJFTSettings {
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean impalingWaterContact = false;
 
+    @Rule(categories = {"JFT", SURVIVAL})
+    public static boolean turtleKelpFeedingAndViviparousBreeding = false;
+
 }

@@ -2,12 +2,10 @@ package com.jft.mixin.rules.channelingWeather;
 
 import com.jft.CarpetJFTSettings;
 import com.jft.toolsMager.channelingWeather.ChannelingHelper;
-import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.condition.WeatherCheckLootCondition;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,10 +15,7 @@ import java.util.Objects;
 
 
 @Mixin(WeatherCheckLootCondition.class)
-public abstract class WeatherCheckLootConditionMixin implements LootCondition {
-
-    @Shadow
-    public abstract boolean equals(Object par1);
+public abstract class WeatherCheckLootConditionMixin{
 
     @Inject(method = "test(Lnet/minecraft/loot/context/LootContext;)Z", at = @At("HEAD"), cancellable = true)
     private void injectWeatherCheckLootCondition(

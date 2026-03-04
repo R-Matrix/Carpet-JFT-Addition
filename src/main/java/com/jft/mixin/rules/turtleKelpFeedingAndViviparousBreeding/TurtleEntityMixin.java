@@ -1,5 +1,7 @@
-package com.jft.mixin;
+package com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding;
 
+import com.jft.CarpetJFTSettings;
+import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.TurtleEntityAccess;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -14,17 +16,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(TurtleEntity.class)
-public abstract class TurtleMixin extends AnimalEntityMixin {
+public abstract class TurtleEntityMixin extends AnimalEntityMixin implements TurtleEntityAccess {
 
 
-    protected TurtleMixin(EntityType<? extends PassiveEntity> entityType, World world) {
+    protected TurtleEntityMixin(EntityType<? extends PassiveEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Unique
     public boolean jft$isBreedingKelpItem(ItemStack stack) {
-        return stack.isOf(Items.KELP);
+        return CarpetJFTSettings.turtleKelpFeedingAndViviparousBreeding && stack.isOf(Items.KELP);
     }
+
+    @Unique
+    private boolean jft$shouldBeViviparous = false;
 
 
     @Override
@@ -37,11 +42,21 @@ public abstract class TurtleMixin extends AnimalEntityMixin {
                 this.eat(player, hand, itemStack);
                 this.lovePlayer(player);
                 this.playEatSound();
+                this.setJft$shouldBeViviparous(true);
                 return ActionResult.SUCCESS_SERVER;
             }
         }
         return super.jft$interactMobHook(player, hand, original);
     }
 
+    @Override
+    public boolean jft$shouldBeViviparous() {
+        return this.jft$shouldBeViviparous;
+    }
+
+    @Override
+    public void setJft$shouldBeViviparous(boolean value) {
+        this.jft$shouldBeViviparous = value;
+    }
 
 }
