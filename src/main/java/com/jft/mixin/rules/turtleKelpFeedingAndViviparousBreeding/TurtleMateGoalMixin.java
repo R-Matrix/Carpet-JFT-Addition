@@ -50,7 +50,7 @@ public abstract class TurtleMateGoalMixin extends AnimalMateGoal {
     @Inject(method = "breed", at = @At("TAIL"))
     private void useSuperBreed(CallbackInfo ci, @Share("shouldBeViviparous")LocalBooleanRef beViviparousRef){
         if(beViviparousRef.get() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)){
-            ((AnimalEntityInvoker)this.turtle).invokerBreed(world, this.turtle);
+            super.breed();
             beViviparousRef.set(false);
             ((TurtleEntityAccess)this.turtle).setJft$shouldBeViviparous(false);
         }

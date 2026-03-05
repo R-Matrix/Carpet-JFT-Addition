@@ -14,8 +14,8 @@
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",
     "rules.tridentMultipleDamage.PersistentProjectileEntityApplyCollisionMixin",
-    "rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityInvoker",
     "rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin",
+    "rules.turtleKelpFeedingAndViviparousBreeding.TemptGoalMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.TurtleEntityMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.TurtleMateGoalMixin"
   ],
