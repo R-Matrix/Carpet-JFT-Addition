@@ -1,6 +1,8 @@
 package com.jft.mixin.rules.impalingWaterContact;
 
 import com.jft.CarpetJFTSettings;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
@@ -17,7 +19,6 @@ import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
@@ -39,18 +40,18 @@ public abstract class EnchantmentMixin {
         return entries;
     }
 
-    @Redirect(method = "applyEffects", at = @At(value = "INVOKE",
+    @WrapOperation(method = "applyEffects", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/enchantment/effect/EnchantmentEffectEntry;test(Lnet/minecraft/loot/context/LootContext;)Z"))
     private static boolean redirectTestMethod(
-            EnchantmentEffectEntry<EnchantmentValueEffect> effect, LootContext lootContext,
-            @Share("isImpalingFlag") LocalRef<Boolean> flagRef, @Share("beAttractedEntity") LocalRef<Entity> userRef) {
+            EnchantmentEffectEntry<?> entries, LootContext lootContext,
+            Operation<Boolean> original, @Share("isImpalingFlag") LocalRef<Boolean> flagRef, @Share("beAttractedEntity") LocalRef<Entity> userRef) {
         if (CarpetJFTSettings.impalingWaterContact && flagRef.get()){
             flagRef.set(false);
             if(userRef.get().isAlive()&& userRef.get().isTouchingWaterOrRain()){
                 return true;
             }
         }
-        return effect.test(lootContext);
+        return original.call(entries, lootContext);
     }
 }
 

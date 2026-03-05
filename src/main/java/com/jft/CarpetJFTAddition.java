@@ -43,10 +43,7 @@ public class CarpetJFTAddition implements ModInitializer, CarpetExtension {
 		CarpetServer.settingsManager.parseSettingsClass(CarpetJFTSettings.class);
 	}
 
-//	@Override
-//	public Map<String, String> canHasTranslations(String lang) {
-//		return Translations.getTranslationFromResourcePath("assets/carpet-jft-addition/lang/" + lang + ".yml");
-//	}
+
 	@Override
 	public Map<String, String> canHasTranslations(String lang) {
 

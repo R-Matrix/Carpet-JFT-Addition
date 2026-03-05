@@ -2,23 +2,26 @@ package com.jft.mixin.rules.channelingCanSeeSky;
 
 import com.jft.CarpetJFTSettings;
 import com.jft.toolsMager.channelingWeather.ChannelingHelper;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.predicate.entity.LocationPredicate;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(LocationPredicate.class)
 public abstract class ChannelingLocationPredicateCanSeeSkyMixin {
 
-    @Inject(method = "test", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isSkyVisible(Lnet/minecraft/util/math/BlockPos;)Z"), cancellable = true)
-    private void InjectLocationPredicate(ServerWorld world, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
+
+    @WrapOperation(method = "test", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isSkyVisible(Lnet/minecraft/util/math/BlockPos;)Z"))
+    private boolean InjectLocationPredicate(ServerWorld instance, BlockPos blockPos, Operation<Boolean> original) {
         if(!CarpetJFTSettings.channelingCanSeeSky && ChannelingHelper.isFromChannelingFlag()){
             ChannelingHelper.setChannelingFlag(false);
-            cir.setReturnValue(true);
+            return true;
         }
-     }
+        return original.call(instance, blockPos);
+    }
 
 }
