@@ -2,7 +2,6 @@ package com.jft;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
-import carpet.api.settings.SettingsManager;
 import com.google.common.collect.Maps;
 import com.jft.translations.JFTTranslationConstants;
 import com.jft.translations.JFTTranslations;
@@ -21,8 +20,9 @@ public class CarpetJFTAddition implements ModInitializer, CarpetExtension {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final String MOD_VERSION = "0.0.5";
 
-	private static final SettingsManager mySettingManager =
-			new SettingsManager(MOD_VERSION, MOD_ID, "CarpetJFTAddition");
+//	This is the original code{
+//	private static final SettingsManager mySettingManager =
+//			new SettingsManager(MOD_VERSION, MOD_ID, "CarpetJFTAddition");
 
 	@Override
 	public void onInitialize() {

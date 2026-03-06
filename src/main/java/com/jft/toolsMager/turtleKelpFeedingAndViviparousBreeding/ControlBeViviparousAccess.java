@@ -1,6 +1,6 @@
 package com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding;
 
-public interface TurtleEntityAccess {
+public interface ControlBeViviparousAccess {
 
     void setJft$shouldBeViviparous(boolean value);
 

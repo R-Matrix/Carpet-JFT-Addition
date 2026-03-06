@@ -1,6 +1,6 @@
 package com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding;
 
-import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.TurtleEntityAccess;
+import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.ControlBeViviparousAccess;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
@@ -33,7 +33,7 @@ public abstract class TurtleMateGoalMixin extends AnimalMateGoal {
     @ModifyArg(method = "breed", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/TurtleEntity;setHasEgg(Z)V"))
     private boolean cancelHasEgg(
             boolean hasEgg, @Share("shouldBeViviparous")LocalBooleanRef beViviparousRef){
-        beViviparousRef.set(((TurtleEntityAccess)this.turtle).jft$shouldBeViviparous());
+        beViviparousRef.set(((ControlBeViviparousAccess)this.turtle).jft$shouldBeViviparous());
         if(beViviparousRef.get())
             return false;
         return hasEgg;
@@ -52,7 +52,7 @@ public abstract class TurtleMateGoalMixin extends AnimalMateGoal {
         if(beViviparousRef.get() && this.world.getGameRules().getBoolean(GameRules.DO_MOB_LOOT)){
             super.breed();
             beViviparousRef.set(false);
-            ((TurtleEntityAccess)this.turtle).setJft$shouldBeViviparous(false);
+            ((ControlBeViviparousAccess)this.turtle).setJft$shouldBeViviparous(false);
         }
     }
 }

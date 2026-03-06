@@ -1,7 +1,7 @@
 package com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding;
 
 import com.jft.CarpetJFTSettings;
-import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.TurtleEntityAccess;
+import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.ControlBeViviparousAccess;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(TurtleEntity.class)
-public abstract class TurtleEntityMixin extends AnimalEntityMixin implements TurtleEntityAccess {
+public abstract class TurtleEntityMixin extends AnimalEntityMixin implements ControlBeViviparousAccess {
 
 
     protected TurtleEntityMixin(EntityType<? extends PassiveEntity> entityType, World world) {

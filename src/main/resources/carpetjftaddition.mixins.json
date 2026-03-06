@@ -3,6 +3,8 @@
   "package": "com.jft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "FrogBrainMixin",
+    "FrogEntityMixin",
     "example.ExampleMixin",
     "rules.canPlayerPickUpLikeArrows.LikeArrowsPickUpTypeMixin",
     "rules.changeUseTridentTimeTicks.TridentItemUsingTimeMixin",
