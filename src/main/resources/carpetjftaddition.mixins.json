@@ -3,6 +3,7 @@
   "package": "com.jft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "FrogBrainInvoker",
     "FrogBrainMixin",
     "FrogEntityMixin",
     "example.ExampleMixin",

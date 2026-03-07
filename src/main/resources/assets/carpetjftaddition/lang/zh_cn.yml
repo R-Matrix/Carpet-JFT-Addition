@@ -72,3 +72,6 @@ carpetjftaddition:
         extra:
           '0': 海龟现在可以通过喂食海带来繁殖
           '1': 繁殖后海龟会直接生下幼年海龟，而不是产下海龟蛋
+      frogDyeFeedingAndViviparousBreeding:
+        name: 青蛙染料喂食与胎生繁殖机制
+        desc: 控制青蛙是否可以通过喂食染料进行繁殖，并实现胎生机制而非产卵

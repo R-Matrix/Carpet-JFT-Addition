@@ -61,3 +61,6 @@ carpetjftaddition:
         extra:
           '0': Turtles can now be bred by feeding them kelp instead of seagrass.
           '1': Breeding results in live birth of baby turtles instead of laying eggs.
+      frogDyeFeedingAndViviparousBreeding:
+        name: frogDyeFeedingAndViviparousBreeding
+        desc: Allows frogs to breed using dyes instead of slime balls, and enables viviparous reproduction.

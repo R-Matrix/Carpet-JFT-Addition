@@ -1,0 +1,58 @@
+package com.jft.toolsMager.Frog;
+
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.brain.MemoryModuleType;
+import net.minecraft.entity.ai.brain.task.Task;
+import net.minecraft.entity.ai.brain.task.TaskTriggerer;
+import net.minecraft.entity.passive.FrogEntity;
+import net.minecraft.entity.passive.FrogVariant;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+
+public class FrogSpanChildTask {
+
+    //todo: createChildTask
+    public static Task<LivingEntity> create() {
+        return TaskTriggerer.task(
+                context -> context.group(
+                                context.queryMemoryAbsent(MemoryModuleType.ATTACK_TARGET),
+                                context.queryMemoryValue(FrogMemoryModuleType.DYE_FLAG),
+                                context.queryMemoryValue(MemoryModuleType.IS_PREGNANT)
+                        )
+                        .apply(
+                                context,
+                                (attackTarget, dyeFlag, isPregnant) ->
+                                        (world, entity, time) -> {
+                                    if (entity.isOnGround()) {
+                                        FrogEntityDyeFlagAccess parent = (FrogEntityDyeFlagAccess) entity;
+                                        int dyeFlags = parent.jft$getBreedingDyeFlag();
+                                        FrogEntity frogBaby = EntityType.FROG.create(world, SpawnReason.BREEDING);
+                                        if(frogBaby != null) {
+                                            RegistryEntry<FrogVariant> variant = switch (dyeFlags) {
+                                                case 1 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.COLD);
+                                                case 2 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.WARM);
+                                                default -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.TEMPERATE);
+                                            };
+
+                                            frogBaby.setVariant(variant);
+                                            frogBaby.setPos(entity.getX(), entity.getY(), entity.getZ());
+                                            world.spawnEntity(frogBaby);
+
+
+                                            isPregnant.forget();
+                                            dyeFlag.forget();
+
+                                        }
+
+
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                        )
+        );
+    }
+}

@@ -3,6 +3,8 @@ package com.jft;
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import com.google.common.collect.Maps;
+import com.jft.toolsMager.Frog.FrogMemoryModuleType;
+import com.jft.toolsMager.Frog.FrogViviparousActivity;
 import com.jft.translations.JFTTranslationConstants;
 import com.jft.translations.JFTTranslations;
 import net.fabricmc.api.ModInitializer;
@@ -30,6 +32,8 @@ public class CarpetJFTAddition implements ModInitializer, CarpetExtension {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
+		FrogViviparousActivity.init();
+		FrogMemoryModuleType.init();
 		LOGGER.info("Carpet JFT Addition v" + MOD_VERSION + " Has Loaded!");
 
 		JFTTranslations.loadTranslations();

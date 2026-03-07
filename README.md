@@ -1,7 +1,7 @@
 # Carpet-JFT-Addition
 
-[![License](https://img.shields.io/github/license/shudpaa/Carpet-JFT-Addition)](https://choosealicense.com/licenses/mit/)
-[![Github](https://img.shields.io/github/downloads/shudpaa/Carpet-JFT-Addition/total?color=161616&label=Github%20downloads&logo=github)](https://github.com/shudpaa/Capet-JFT-Addition/releases)
+[![License](https://img.shields.io/github/license/shudpaa393/Carpet-JFT-Addition)](https://choosealicense.com/licenses/mit/)
+[![Github](https://img.shields.io/github/downloads/shudpaa393/Carpet-JFT-Addition/total?color=161616&label=Github%20downloads&logo=github)](https://github.com/shudpaa/Capet-JFT-Addition/releases)
 
 这只是一个为了三叉戟的 [Carpet mod](https://github.com/gnembon/fabric-carpet) (fabric-carpet) 扩展 mod，包含了不少~~NotVanilla~~的有意思的功能以及特性
 
@@ -30,4 +30,4 @@
 
 ## 下载
 
-- [GitHub](https://github.com/shudpaa/Carpet-JFT-Addition/releases/latest)
+- [GitHub](https://github.com/shudpaa393/Carpet-JFT-Addition/releases/latest)
