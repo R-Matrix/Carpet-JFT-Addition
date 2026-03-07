@@ -13,7 +13,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 
 public class FrogSpanChildTask {
 
-    //todo: createChildTask
     public static Task<LivingEntity> create() {
         return TaskTriggerer.task(
                 context -> context.group(
