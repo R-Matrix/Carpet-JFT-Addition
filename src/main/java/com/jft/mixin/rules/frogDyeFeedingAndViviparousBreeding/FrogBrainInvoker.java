@@ -1,4 +1,4 @@
-package com.jft.mixin;
+package com.jft.mixin.rules.frogDyeFeedingAndViviparousBreeding;
 
 import net.minecraft.entity.ai.brain.task.TargetUtil;
 import net.minecraft.entity.passive.FrogBrain;

@@ -75,3 +75,5 @@ carpetjftaddition:
       frogDyeFeedingAndViviparousBreeding:
         name: 青蛙染料喂食与胎生繁殖机制
         desc: 控制青蛙是否可以通过喂食染料进行繁殖，并实现胎生机制而非产卵
+        extra:
+          '0': 只能使用橙色, 绿色, 白色三种染料. 并且生出对应颜色的子蛙, 跳过产卵和蝌蚪阶段

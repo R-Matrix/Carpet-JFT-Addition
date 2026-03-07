@@ -1,4 +1,4 @@
-package com.jft.toolsMager.Frog;
+package com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

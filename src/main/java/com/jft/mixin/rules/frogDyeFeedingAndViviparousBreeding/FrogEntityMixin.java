@@ -1,11 +1,11 @@
-package com.jft.mixin;
+package com.jft.mixin.rules.frogDyeFeedingAndViviparousBreeding;
 
 import com.google.common.collect.ImmutableList;
 import com.jft.CarpetJFTSettings;
 import com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin;
-import com.jft.toolsMager.Frog.AddViviparousSpawnActivities;
-import com.jft.toolsMager.Frog.FrogEntityDyeFlagAccess;
-import com.jft.toolsMager.Frog.FrogMemoryModuleType;
+import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.AddViviparousSpawnActivities;
+import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogEntityDyeFlagAccess;
+import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogMemoryModuleType;
 import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.ControlBeViviparousAccess;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
@@ -120,7 +120,7 @@ public abstract class FrogEntityMixin extends AnimalEntityMixin
 
     @ModifyReturnValue(method = "deserializeBrain", at = @At("RETURN"))
     private Brain<FrogEntity> se(Brain<FrogEntity> original){
-            AddViviparousSpawnActivities.jft$addViviparousSpawnActivities((Brain<FrogEntity>) original);
+            AddViviparousSpawnActivities.jft$addViviparousSpawnActivities(original);
         return original;
     }
 

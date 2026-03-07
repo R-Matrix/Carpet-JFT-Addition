@@ -1,4 +1,4 @@
-package com.jft.toolsMager.Frog;
+package com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding;
 
 import com.jft.CarpetJFTAddition;
 import net.minecraft.entity.ai.brain.Activity;
@@ -14,11 +14,11 @@ public class FrogViviparousActivity extends Activity {
         super(id);
     }
 
-    private static FrogViviparousActivity register(String id) {
-        return Registry.register(Registries.ACTIVITY, Identifier.of(CarpetJFTAddition.MOD_ID, id), new FrogViviparousActivity(id));
+    private static FrogViviparousActivity register() {
+        return Registry.register(Registries.ACTIVITY, Identifier.of(CarpetJFTAddition.MOD_ID, "viviparous"), new FrogViviparousActivity("viviparous"));
     }
 
     public static void init(){
-        VIVIPAROUS_ACTIVITY = register("viviparous");
+        VIVIPAROUS_ACTIVITY = register();
     }
 }

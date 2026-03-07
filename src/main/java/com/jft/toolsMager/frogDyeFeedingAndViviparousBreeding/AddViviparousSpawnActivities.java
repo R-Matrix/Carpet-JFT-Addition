@@ -1,8 +1,8 @@
-package com.jft.toolsMager.Frog;
+package com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.jft.mixin.FrogBrainInvoker;
+import com.jft.mixin.rules.frogDyeFeedingAndViviparousBreeding.FrogBrainInvoker;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

@@ -1,4 +1,4 @@
-package com.jft.toolsMager.Frog;
+package com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding;
 
 public interface FrogEntityDyeFlagAccess {
 

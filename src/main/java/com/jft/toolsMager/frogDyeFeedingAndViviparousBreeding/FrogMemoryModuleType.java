@@ -1,4 +1,4 @@
-package com.jft.toolsMager.Frog;
+package com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding;
 
 import com.jft.CarpetJFTAddition;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.Optional;
 
-public class FrogMemoryModuleType<U> {
+public class FrogMemoryModuleType{
 
     public static MemoryModuleType<Integer> DYE_FLAG ;
     public static MemoryModuleType<Boolean> VIVIPAROUS_MODEL;
@@ -17,14 +17,14 @@ public class FrogMemoryModuleType<U> {
         return Registry.register(
                 Registries.MEMORY_MODULE_TYPE,
                 Identifier.of(CarpetJFTAddition.MOD_ID, id),
-                new MemoryModuleType<>(Optional.empty())  // 无 Codec
+                new MemoryModuleType<>(Optional.empty())
         );
     }
 
     public static void init() {
         DYE_FLAG = register("dye_flag");
         VIVIPAROUS_MODEL = register("viviparous_model");
-    } // 触发静态初始化
+    }
 
 
 }
