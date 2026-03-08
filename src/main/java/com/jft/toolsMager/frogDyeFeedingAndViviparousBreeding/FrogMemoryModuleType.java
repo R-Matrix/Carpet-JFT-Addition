@@ -11,7 +11,6 @@ import java.util.Optional;
 public class FrogMemoryModuleType{
 
     public static MemoryModuleType<Integer> DYE_FLAG ;
-    public static MemoryModuleType<Boolean> VIVIPAROUS_MODEL;
 
     public static <U> MemoryModuleType<U> register(String id) {
         return Registry.register(
@@ -23,7 +22,6 @@ public class FrogMemoryModuleType{
 
     public static void init() {
         DYE_FLAG = register("dye_flag");
-        VIVIPAROUS_MODEL = register("viviparous_model");
     }
 
 

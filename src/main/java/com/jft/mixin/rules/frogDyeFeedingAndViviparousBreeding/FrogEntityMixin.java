@@ -41,12 +41,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class FrogEntityMixin extends AnimalEntityMixin
         implements VariantHolder<RegistryEntry<FrogVariant>>, ControlBeViviparousAccess, FrogEntityDyeFlagAccess {
 
-    @Shadow
-    public abstract Brain<FrogEntity> getBrain();
-
     protected FrogEntityMixin(EntityType<? extends PassiveEntity> entityType, World world) {
         super(entityType, world);
     }
+
+
+    @Final
+    @Shadow
+    protected static ImmutableList<MemoryModuleType<?>> MEMORY_MODULES;
+
+    @Final
+    @Shadow
+    protected static ImmutableList<SensorType<? extends Sensor<? super FrogEntity>>> SENSORS;
 
     @Unique
     private int breedingDyeFlag = -1;
@@ -91,24 +97,17 @@ public abstract class FrogEntityMixin extends AnimalEntityMixin
 
 
     @Inject(method = "breed", at = @At("TAIL"))
-    private void se(ServerWorld world, AnimalEntity other, CallbackInfo ci){
+    private void setFlagObBreed(ServerWorld world, AnimalEntity other, CallbackInfo ci){
         if(CarpetJFTSettings.frogDyeFeedingAndViviparousBreeding && this.jft$shouldBeViviparous()) {
             this.getBrain().remember(FrogMemoryModuleType.DYE_FLAG, this.jft$getBreedingDyeFlag());
         }
         this.setJft$shouldBeViviparous(false);
+        this.jft$setBreedingDyeFlag(-1);
     }
 
 
-    @Final
-    @Shadow
-    protected static ImmutableList<MemoryModuleType<?>> MEMORY_MODULES;
-
-    @Final
-    @Shadow
-    protected static ImmutableList<SensorType<? extends Sensor<? super FrogEntity>>> SENSORS;
-
     @WrapMethod(method = "createBrainProfile")
-    private Brain.Profile<FrogEntity> se(Operation<Brain.Profile<FrogEntity>> original){
+    private Brain.Profile<FrogEntity> addMyMemoryModuleType(Operation<Brain.Profile<FrogEntity>> original){
 
         ImmutableList<MemoryModuleType<?>> newMemoryModel = ImmutableList.<MemoryModuleType<?>>builder()
                 .addAll(MEMORY_MODULES)
@@ -119,8 +118,9 @@ public abstract class FrogEntityMixin extends AnimalEntityMixin
 
 
     @ModifyReturnValue(method = "deserializeBrain", at = @At("RETURN"))
-    private Brain<FrogEntity> se(Brain<FrogEntity> original){
-            AddViviparousSpawnActivities.jft$addViviparousSpawnActivities(original);
+    private Brain<FrogEntity> addMyActivityAtBrain(Brain<FrogEntity> original){
+
+        AddViviparousSpawnActivities.jft$addViviparousSpawnActivities(original);
         return original;
     }
 

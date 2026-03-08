@@ -64,3 +64,6 @@ carpetjftaddition:
       frogDyeFeedingAndViviparousBreeding:
         name: frogDyeFeedingAndViviparousBreeding
         desc: Allows frogs to breed using dyes instead of slime balls, and enables viviparous reproduction.
+      allowAmethystBudCanGrowAtWater:
+        name: allowAmethystBudCanGrowAtWater
+        desc: Allows amethyst buds to grow in only air.

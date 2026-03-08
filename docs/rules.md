@@ -2,6 +2,7 @@
 
 **提示：可以使用`Ctrl+F`快速查找自己想要的规则**
 
+---
 
 ## 控制引雷附魔天气要求 (channelingWeather)
 
@@ -177,5 +178,19 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 
 - 类型: `boolean`
 - 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `JFT`, `SURVIVAL`
+
+
+## 控制紫水晶母岩是否能在水中生长出紫水晶 (allowAmethystBudCanGrowAtWater)
+
+控制紫水晶母岩是否能在水中生长出紫水晶
+
+设置为 `false` 后, 紫水晶母岩仅能在表面为空气时长出紫水晶
+
+可以防止在无侧沟世吞中由于紫水晶母岩生长的紫水晶破坏水墙
+
+- 类型: `boolean`
+- 默认值: `true`
 - 参考选项: `false`, `true`
 - 分类: `JFT`, `SURVIVAL`

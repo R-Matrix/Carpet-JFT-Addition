@@ -111,4 +111,7 @@ public class CarpetJFTSettings {
     @Rule(categories = {"JFT", SURVIVAL})
     public static boolean frogDyeFeedingAndViviparousBreeding = false;
 
+    @Rule(categories = {"JFT", SURVIVAL})
+    public static boolean allowAmethystBudCanGrowAtWater = true;
+
 }

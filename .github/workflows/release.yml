@@ -41,7 +41,7 @@ jobs:
           # 上传所有 jar 文件
           files: |
             build/libs/*.jar
-            !build/libs/*-resource*.jar
+            !build/libs/*-sources.jar
           # 自动生成 release 标题和说明
           generate_release_notes: true
           # 可以自定义 release 名称，例如 "Release v1.0.0"

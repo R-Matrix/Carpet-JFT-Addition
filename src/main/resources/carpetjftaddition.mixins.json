@@ -3,6 +3,7 @@
   "package": "com.jft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "BuddingAmethystBlockMixin",
     "example.ExampleMixin",
     "rules.canPlayerPickUpLikeArrows.LikeArrowsPickUpTypeMixin",
     "rules.changeUseTridentTimeTicks.TridentItemUsingTimeMixin",
