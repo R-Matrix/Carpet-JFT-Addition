@@ -1,4 +1,4 @@
-package com.jft.mixin;
+package com.jft.mixin.rules.allowAmethystBudCanGrowAtWater;
 
 import com.jft.CarpetJFTSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
