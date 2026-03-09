@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.jft.CarpetJFTSettings;
 import com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.AddViviparousSpawnActivities;
+import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogDyeTemptationSensorType;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogEntityDyeFlagAccess;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogMemoryModuleType;
 import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.ControlBeViviparousAccess;
@@ -109,11 +110,19 @@ public abstract class FrogEntityMixin extends AnimalEntityMixin
     @WrapMethod(method = "createBrainProfile")
     private Brain.Profile<FrogEntity> addMyMemoryModuleType(Operation<Brain.Profile<FrogEntity>> original){
 
-        ImmutableList<MemoryModuleType<?>> newMemoryModel = ImmutableList.<MemoryModuleType<?>>builder()
-                .addAll(MEMORY_MODULES)
-                .add(FrogMemoryModuleType.DYE_FLAG)
-                .build();
-        return Brain.createProfile(newMemoryModel, SENSORS);
+        ImmutableList<MemoryModuleType<?>> newMemoryModel =
+                ImmutableList.<MemoryModuleType<?>>builder()
+                    .addAll(MEMORY_MODULES)
+                    .add(FrogMemoryModuleType.DYE_FLAG)
+                    .build();
+
+        ImmutableList<SensorType<? extends Sensor<? super FrogEntity>>> newSensorType =
+                ImmutableList.<SensorType<? extends Sensor<? super FrogEntity>>>builder()
+                    .addAll(SENSORS)
+                    .add(FrogDyeTemptationSensorType.FROG_DYE_TEMPTATION)
+                    .build();
+
+        return Brain.createProfile(newMemoryModel, newSensorType);
     }
 
 

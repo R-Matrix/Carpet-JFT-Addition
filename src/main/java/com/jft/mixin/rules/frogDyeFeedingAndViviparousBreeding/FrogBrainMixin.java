@@ -20,7 +20,8 @@ public class FrogBrainMixin{
     @Shadow
     private static boolean isNotBreeding(FrogEntity frog) {return false;}
 
-    @ModifyArg(method = "updateActivities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ai/brain/Brain;resetPossibleActivities(Ljava/util/List;)V"))
+    @ModifyArg(method = "updateActivities", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/entity/ai/brain/Brain;resetPossibleActivities(Ljava/util/List;)V"))
     private static List<Activity> modifyUpdateActivities(List<Activity> activities){
 
         List<Activity> actCopy = new ArrayList<>(activities);

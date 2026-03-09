@@ -25,11 +25,10 @@ public class FrogSpanChildTask {
                                 (attackTarget, dyeFlag, isPregnant) ->
                                         (world, entity, time) -> {
                                     if (entity.isOnGround()) {
-                                        FrogEntityDyeFlagAccess parent = (FrogEntityDyeFlagAccess) entity;
-                                        int dyeFlags = parent.jft$getBreedingDyeFlag();
+                                        int flagValue = context.getValue(dyeFlag);
                                         FrogEntity frogBaby = EntityType.FROG.create(world, SpawnReason.BREEDING);
                                         if(frogBaby != null) {
-                                            RegistryEntry<FrogVariant> variant = switch (dyeFlags) {
+                                            RegistryEntry<FrogVariant> variant = switch (flagValue) {
                                                 case 1 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.COLD);
                                                 case 2 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.WARM);
                                                 default -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.TEMPERATE);

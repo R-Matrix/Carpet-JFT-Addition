@@ -3,7 +3,6 @@ package com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding;
 import com.jft.CarpetJFTSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.TurtleEntity;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(TemptGoal.class)
-public abstract class TemptGoalMixin extends Goal {
+public abstract class TemptGoalMixin {
 
     @Shadow
     @Final
