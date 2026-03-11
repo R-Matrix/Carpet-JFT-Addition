@@ -55,13 +55,13 @@ public class CarpetJFTSettings {
     public static String channelingWeather = "VANILLA";
 
 
-    @Rule(categories = {"JFT", SURVIVAL})
+    @Rule(categories = {SURVIVAL, "JFT"})
     public static Boolean channelingCanSeeSky = true;
 
 
     @Rule(
             options = {"VANILLA", "ANY", "WATERRorLAVA", "DISABLED"},
-            categories = {"JFT", SURVIVAL}
+            categories = {SURVIVAL, "JFT"}
     )
     public static String riptideTouchingWater = "VANILLA";
 
@@ -75,7 +75,7 @@ public class CarpetJFTSettings {
     public static int changeUseTridentTimeTicks = 10;
 
 
-    @Rule(categories = {"JFT", SURVIVAL})
+    @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean drownedReinforcementCanSpawnZombie = false;
 
 
@@ -95,23 +95,31 @@ public class CarpetJFTSettings {
     public static double reinforcementAttributeInit = -1.0;
 
 
-    @Rule(categories = {SURVIVAL, FEATURE, "JFT"})
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean canPlayerPickUpLikeArrows = false;
 
 
-    @Rule(categories = {"JFT", SURVIVAL, FEATURE})
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean tridentMultipleDamage = false;
+
 
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean impalingWaterContact = false;
 
-    @Rule(categories = {"JFT", SURVIVAL})
+
+    @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean turtleKelpFeedingAndViviparousBreeding = false;
 
-    @Rule(categories = {"JFT", SURVIVAL})
+
+    @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean frogDyeFeedingAndViviparousBreeding = false;
 
-    @Rule(categories = {"JFT", SURVIVAL})
+
+    @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean allowAmethystBudCanGrowAtWater = true;
+
+
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
+    public static boolean amethystPistonBehaviorNormal = false;
 
 }

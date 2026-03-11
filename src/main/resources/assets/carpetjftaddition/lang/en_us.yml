@@ -67,3 +67,6 @@ carpetjftaddition:
       allowAmethystBudCanGrowAtWater:
         name: allowAmethystBudCanGrowAtWater
         desc: Allows amethyst buds to grow in only air.
+      amethystPistonBehaviorNormal:
+        name: amethystPistonBehaviorNormal
+        desc: (Amethyst cluster and small amethyst bud)'s piston behaviour like normal block instead of destroy.

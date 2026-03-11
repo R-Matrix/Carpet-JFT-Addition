@@ -5,6 +5,8 @@
   "mixins": [
     "example.ExampleMixin",
     "rules.allowAmethystBudCanGrowAtWater.BuddingAmethystBlockMixin",
+    "rules.amethystPistonBehaviorNormal.PistonBlockMixin",
+    "rules.amethystPistonBehaviorNormal.PistonHandlerMixin",
     "rules.canPlayerPickUpLikeArrows.LikeArrowsPickUpTypeMixin",
     "rules.changeUseTridentTimeTicks.TridentItemUsingTimeMixin",
     "rules.channelingCanSeeSky.ChannelingLocationPredicateCanSeeSkyMixin",
@@ -14,6 +16,7 @@
     "rules.frogDyeFeedingAndViviparousBreeding.FrogBrainInvoker",
     "rules.frogDyeFeedingAndViviparousBreeding.FrogBrainMixin",
     "rules.frogDyeFeedingAndViviparousBreeding.FrogEntityMixin",
+    "rules.frogDyeFeedingAndViviparousBreeding.FrogTemptationSensorMixin",
     "rules.impalingWaterContact.EnchantmentMixin",
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",

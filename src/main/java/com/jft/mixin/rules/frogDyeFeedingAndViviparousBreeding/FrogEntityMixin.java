@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.jft.CarpetJFTSettings;
 import com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.AddViviparousSpawnActivities;
-import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogDyeTemptationSensorType;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogEntityDyeFlagAccess;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogMemoryModuleType;
 import com.jft.toolsMager.turtleKelpFeedingAndViviparousBreeding.ControlBeViviparousAccess;
@@ -116,13 +115,7 @@ public abstract class FrogEntityMixin extends AnimalEntityMixin
                     .add(FrogMemoryModuleType.DYE_FLAG)
                     .build();
 
-        ImmutableList<SensorType<? extends Sensor<? super FrogEntity>>> newSensorType =
-                ImmutableList.<SensorType<? extends Sensor<? super FrogEntity>>>builder()
-                    .addAll(SENSORS)
-                    .add(FrogDyeTemptationSensorType.FROG_DYE_TEMPTATION)
-                    .build();
-
-        return Brain.createProfile(newMemoryModel, newSensorType);
+        return Brain.createProfile(newMemoryModel, SENSORS);
     }
 
 

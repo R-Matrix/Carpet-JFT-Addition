@@ -3,7 +3,6 @@ package com.jft;
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import com.google.common.collect.Maps;
-import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogDyeTemptationSensorType;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogMemoryModuleType;
 import com.jft.toolsMager.frogDyeFeedingAndViviparousBreeding.FrogViviparousActivity;
 import com.jft.translations.JFTTranslationConstants;
@@ -35,7 +34,6 @@ public class CarpetJFTAddition implements ModInitializer, CarpetExtension {
 
 		FrogViviparousActivity.init();
 		FrogMemoryModuleType.init();
-		FrogDyeTemptationSensorType.init();
 
 		LOGGER.info("Carpet JFT Addition v" + MOD_VERSION + " Has Loaded!");
 

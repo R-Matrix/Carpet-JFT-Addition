@@ -8,7 +8,7 @@
 
 控制三叉戟引雷附魔的天气要求
 
-***没错, 这是第一个实现的规则***
+***没错, 这是Carpet JFT Addition 的第一条规则***
 
 或许可以用在成就获取?远古守卫者农场?头颅农场?
 
@@ -20,7 +20,7 @@
 - 类型: `string`
 - 默认值: `VANILLA`
 - 参考选项: `VANILLA`, `RAINING`, `ANY`, `DISABLED`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 控制引雷附魔露天判断要求 (channelingCanSeeSky)
@@ -30,7 +30,7 @@
 - 类型: `boolean`
 - 默认值: `true`
 - 参考选项: `true`, `false`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 控制激流是否要求玩家接触水 (riptideTouchingWater)
@@ -49,7 +49,7 @@
 - 类型: `string`
 - 默认值: `VANILLA`
 - 参考选项: `VANILLA`, `WATERRorLAVA`, `ANY`, `DISABLED`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 修改使用三叉戟需求蓄力时间 (changeUseTridentTimeTicks)
@@ -69,7 +69,7 @@
 - 类型: `int`
 - 默认值: `10`
 - 参考选项: `10`, `5`, `0`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 溺尸进行僵尸增援时生成僵尸而非溺尸 (drownedReinforcementCanSpawnZombie)
@@ -79,7 +79,7 @@
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 修改溺尸生成时携带装备的概率 (drownedSpawnHasEquipments)
@@ -93,7 +93,7 @@
 - 类型: `double`
 - 默认值: `-1.0`
 - 参考选项: `-1.0`, `0`, `0.5`, `1.0`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 修改僵尸类生物生成时的初始增援能力 (reinforcementAttributeInit)
@@ -107,7 +107,7 @@
 - 类型: `double`
 - 默认值: `-1.0`
 - 参考选项: `-1.0`, `0`, `0.5`, `1.0`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 控制玩家是否可以捡起箭矢类物品(草船借箭) (canPlayerPickUpLikeArrows)
@@ -121,7 +121,7 @@ mc 版的草船借箭(
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`, `FEATURE`
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`
 
 
 ## 允许三叉戟多段攻击 (tridentMultipleDamage)
@@ -137,7 +137,7 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`, `FEATURE`
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`
 
 
 ## 穿刺接触水即可生效 (impalingWaterContact)
@@ -151,7 +151,7 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 海龟海带喂食与胎生繁殖机制 (turtleKelpFeedingAndViviparousBreeding)
@@ -167,7 +167,7 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 青蛙染料喂食与胎生繁殖机制 (frogDyeFeedingAndViviparousBreeding)
@@ -176,14 +176,14 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 
 只能使用橙色, 绿色, 白色三种染料. 并且直接生出对应颜色的子蛙, 跳过产卵和蝌蚪阶段
 
-由于技术问题, 只有新生成的青蛙才能在开启此规则后能被染料引诱靠近
+开启规则后, 生成的青蛙在开启此规则后能被染料引诱靠近
 
 :warning: : 由于注册了新的青蛙记忆任务(BrainTask)并且在青蛙初始化时就加入了青蛙的大脑 **(无论是否开启该规则)**, 所以如果在安装本模组后 **无论是否启用此规则, 青蛙表现异常或出现预期之外的现象**, 或是您有更好的实现方法, 欢迎[邮件交流](mailto:shudpaa@163.com)或者提issue, pr
 
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
 
 
 ## 控制紫水晶母岩是否能在水中生长出紫水晶 (allowAmethystBudCanGrowAtWater)
@@ -197,4 +197,16 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `boolean`
 - 默认值: `true`
 - 参考选项: `false`, `true`
-- 分类: `JFT`, `SURVIVAL`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 紫水晶簇活塞表现正常 (amethystPistonBehaviorNormal)
+
+紫水晶簇和小型紫水晶在被活塞推拉时活塞其行为表现为正常方块而不是被破坏
+
+使得紫水晶簇和小型紫水晶回退到21w11a前紫水晶簇和紫水晶芽类方块的表现, 这也使得紫水晶复制bug再现
+
+- 类型: `boolean`
+- 默认值: `true`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`
