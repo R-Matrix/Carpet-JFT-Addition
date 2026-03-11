@@ -209,4 +209,4 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `boolean`
 - 默认值: `true`
 - 参考选项: `false`, `true`
-- 分类: `SURVIVAL`, `JFT`
+- 分类: `SURVIVAL`, `JFT`  
