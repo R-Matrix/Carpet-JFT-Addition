@@ -122,4 +122,7 @@ public class CarpetJFTSettings {
     @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean amethystPistonBehaviorNormal = false;
 
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
+    public static boolean glowLichenCanShadowBlocks = false;
+
 }

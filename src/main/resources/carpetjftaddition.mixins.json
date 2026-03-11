@@ -17,6 +17,7 @@
     "rules.frogDyeFeedingAndViviparousBreeding.FrogBrainMixin",
     "rules.frogDyeFeedingAndViviparousBreeding.FrogEntityMixin",
     "rules.frogDyeFeedingAndViviparousBreeding.FrogTemptationSensorMixin",
+    "rules.glowLichenCanShadowBlocks.PistonHandlerMixin",
     "rules.impalingWaterContact.EnchantmentMixin",
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",

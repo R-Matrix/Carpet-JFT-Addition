@@ -69,4 +69,7 @@ carpetjftaddition:
         desc: Allows amethyst buds to grow in only air.
       amethystPistonBehaviorNormal:
         name: amethystPistonBehaviorNormal
-        desc: (Amethyst cluster and small amethyst bud)'s piston behaviour like normal block instead of destroy.
+        desc: (Amethyst cluster and small amethyst bud)'s piston behaviour like normal block instead of destroy
+      glowLichenCanShadowBlocks:
+        name: glowLichenCanShadowBlocks
+        desc: Can glow_lichen shadow any block.
