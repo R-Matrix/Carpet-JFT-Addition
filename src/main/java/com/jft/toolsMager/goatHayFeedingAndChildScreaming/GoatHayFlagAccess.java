@@ -1,4 +1,4 @@
-package com.jft.toolsMager.goat;
+package com.jft.toolsMager.goatHayFeedingAndChildScreaming;
 
 public interface GoatHayFlagAccess {
 

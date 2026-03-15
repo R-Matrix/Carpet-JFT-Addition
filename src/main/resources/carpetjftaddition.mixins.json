@@ -3,9 +3,6 @@
   "package": "com.jft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "SignTextMixin",
-    "TurtleEggsMixin",
-    "WetSpongeBlockMixin",
     "example.ExampleMixin",
     "rules.allowAmethystBudCanGrowAtWater.BuddingAmethystBlockMixin",
     "rules.amethystPistonBehaviorNormal.PistonBlockMixin",
@@ -21,15 +18,18 @@
     "rules.frogDyeFeedingAndViviparousBreeding.FrogEntityMixin",
     "rules.frogDyeFeedingAndViviparousBreeding.FrogTemptationSensorMixin",
     "rules.glowLichenCanShadowBlocks.PistonHandlerMixin",
-    "rules.goat.GoatEntityMixin",
+    "rules.goatHayFeedingAndChildScreaming.GoatEntityMixin",
     "rules.impalingWaterContact.EnchantmentMixin",
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",
+    "rules.signTextGlowingAlways.SignTextMixin",
     "rules.tridentMultipleDamage.PersistentProjectileEntityApplyCollisionMixin",
+    "rules.turtleEggsDriedKelpBlockFaster.TurtleEggsMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.TemptGoalMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.TurtleEntityMixin",
-    "rules.turtleKelpFeedingAndViviparousBreeding.TurtleMateGoalMixin"
+    "rules.turtleKelpFeedingAndViviparousBreeding.TurtleMateGoalMixin",
+    "rules.wetSpongeDriesOnDesertAndBedLands.WetSpongeBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

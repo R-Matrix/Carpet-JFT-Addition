@@ -1,4 +1,4 @@
-package com.jft.mixin;
+package com.jft.mixin.rules.signTextGlowingAlways;
 
 import com.jft.CarpetJFTSettings;
 import net.minecraft.block.entity.SignText;

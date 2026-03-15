@@ -1,7 +1,7 @@
-package com.jft.mixin.rules.goat;
+package com.jft.mixin.rules.goatHayFeedingAndChildScreaming;
 
 import com.jft.mixin.rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin;
-import com.jft.toolsMager.goat.GoatHayFlagAccess;
+import com.jft.toolsMager.goatHayFeedingAndChildScreaming.GoatHayFlagAccess;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.EntityType;
