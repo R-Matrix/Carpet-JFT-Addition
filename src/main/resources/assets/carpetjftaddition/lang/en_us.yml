@@ -73,3 +73,15 @@ carpetjftaddition:
       glowLichenCanShadowBlocks:
         name: glowLichenCanShadowBlocks
         desc: Can glow_lichen shadow any block.
+      signTextGlowingAlways:
+        name: signTextGlowingAlways
+        desc: Sign text is always glowing when you put a new sign.
+      wetSpongeDriesOnDesertAndBedLands:
+        name: wetSpongeDriesOnDesertAndBedLands
+        desc: WetSpongeBlock can be dired on desert and badlands biomes.
+      goatHayFeedingAndChildScreaming:
+        name: goatHayFeedingAndChildScreaming
+        desc: goatHayFeedingAndChildScreaming
+      turtleEggsDriedKelpBlockFaster:
+        name: turtleEggsDriedKelpBlockFaster
+        desc: turtleEggsDriedKelpBlockFaster

@@ -125,4 +125,16 @@ public class CarpetJFTSettings {
     @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean glowLichenCanShadowBlocks = false;
 
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean signTextGlowingAlways = false;
+
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean wetSpongeDriesOnDesertAndBedLands = false;
+
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean goatHayFeedingAndChildScreaming = false;
+
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean turtleEggsDriedKelpBlockFaster = false;
+
 }

@@ -3,6 +3,9 @@
   "package": "com.jft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "SignTextMixin",
+    "TurtleEggsMixin",
+    "WetSpongeBlockMixin",
     "example.ExampleMixin",
     "rules.allowAmethystBudCanGrowAtWater.BuddingAmethystBlockMixin",
     "rules.amethystPistonBehaviorNormal.PistonBlockMixin",
@@ -18,6 +21,7 @@
     "rules.frogDyeFeedingAndViviparousBreeding.FrogEntityMixin",
     "rules.frogDyeFeedingAndViviparousBreeding.FrogTemptationSensorMixin",
     "rules.glowLichenCanShadowBlocks.PistonHandlerMixin",
+    "rules.goat.GoatEntityMixin",
     "rules.impalingWaterContact.EnchantmentMixin",
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",

@@ -30,7 +30,7 @@ public class PistonHandlerMixin {
     private List<BlockPos> movedBlocks;
 
     @ModifyReturnValue(method = "tryMove", at = @At(value = "RETURN", ordinal = 10))
-    private boolean ModifyBrokenBlocksList(boolean original, @Local(name = "blockPos2") BlockPos blockPos2){
+    private boolean ModifyBrokenBlocksList(boolean original, @Local(type = BlockPos.class, ordinal = 1) BlockPos blockPos2){
 
         if(CarpetJFTSettings.glowLichenCanShadowBlocks && this.world.getBlockState(blockPos2).isOf(Blocks.GLOW_LICHEN)){
             this.brokenBlocks.removeLast();
