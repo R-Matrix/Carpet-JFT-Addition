@@ -122,19 +122,38 @@ public class CarpetJFTSettings {
     @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean amethystPistonBehaviorNormal = false;
 
+
     @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean glowLichenCanShadowBlocks = false;
+
 
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean signTextGlowingAlways = false;
 
+
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean wetSpongeDriesOnDesertAndBedLands = false;
+
 
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean goatHayFeedingAndChildScreaming = false;
 
+
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean turtleEggsDriedKelpBlockFaster = false;
+
+
+    @Rule(options = {"10", "20", "40"},
+            strict = false,
+            validators = {jft_intValidator.class},
+            categories = {SURVIVAL, "JFT"})
+    public static int animalsSpanLimit = 10;
+
+
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean animalsRaleSetting = true;
+
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean canTillFarmlandBelowBlockList = false;
 
 }

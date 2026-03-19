@@ -3,6 +3,9 @@
   "package": "com.jft.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "HoeItemMixin",
+    "SpawnHelperInfoMixin",
+    "SpawnHelperMixin",
     "example.ExampleMixin",
     "rules.allowAmethystBudCanGrowAtWater.BuddingAmethystBlockMixin",
     "rules.amethystPistonBehaviorNormal.PistonBlockMixin",

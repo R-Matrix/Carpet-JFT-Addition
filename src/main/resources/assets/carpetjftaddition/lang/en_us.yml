@@ -85,3 +85,12 @@ carpetjftaddition:
       turtleEggsDriedKelpBlockFaster:
         name: turtleEggsDriedKelpBlockFaster
         desc: turtleEggsDriedKelpBlockFaster
+      animalsSpanLimit:
+        name: animalsSpanLimit
+        desc: animalsSpanLimit
+      animalsRaleSetting:
+        name: animalsRaleSetting
+        desc: animalsRaleSetting
+      canTillFarmlandBelowBlockList:
+        name: canTillFarmlandBelowBlockList
+        desc: canTillFarmlandBelowBlockList(Water, Ice, Bedrock)
