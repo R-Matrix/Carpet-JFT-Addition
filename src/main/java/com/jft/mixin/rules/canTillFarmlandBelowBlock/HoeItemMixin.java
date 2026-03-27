@@ -1,4 +1,4 @@
-package com.jft.mixin;
+package com.jft.mixin.rules.canTillFarmlandBelowBlock;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.block.Block;
@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.jft.CarpetJFTSettings.canTillFarmlandBelowBlockList;
+import static com.jft.CarpetJFTSettings.canTillFarmlandBelowBlock;
 
 @Mixin(HoeItem.class)
 public class HoeItemMixin {
 
     @ModifyReturnValue(method = "canTillFarmland", at = @At("RETURN"))
     private static boolean se(boolean original, ItemUsageContext context) {
-        if (canTillFarmlandBelowBlockList)
+        if (canTillFarmlandBelowBlock)
             return original || jft$isInJft$canTillFarmlandBelowBlockList(context);
         return original;
     }

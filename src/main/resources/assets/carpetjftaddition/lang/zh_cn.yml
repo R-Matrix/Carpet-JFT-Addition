@@ -95,7 +95,7 @@ carpetjftaddition:
           '1': 只能是推动方向,  拉回方向发光地衣会被破坏
       signTextGlowingAlways:
         name: 告示牌放下后文字总发光
-        desc: 告示牌放下后文字总发光
+        desc: 放下的告示牌文字总是使用荧光墨囊那样高亮显示
       wetSpongeDriesOnDesertAndBedLands:
         name: 湿海绵在炎热群系蒸干
         desc: 湿海绵可以在沙漠或恶地(及其变种)群系蒸干, 就像在下界一样.
@@ -109,3 +109,16 @@ carpetjftaddition:
         desc: 海龟蛋放在干海带块上可以加速孵化, 时间大概缩短到10min.
         extra:
           '0': 原版中, 当海龟蛋放到沙子中时, 海龟蛋大概需要90min才能孵化.
+      animalsSpanLimit:
+        name: 动物生成数量上限
+        desc: 修改动物自然生成的数量上限, 原版为10
+      animalsRaleSetting:
+        name: 设置动物是否为稀有生成
+        desc: 设置动物的生成是否属于稀有生成
+        extra:
+          '0': 稀有生成会限制20s尝试生成一次, 非稀有为1gt尝试生成一次
+      canTillFarmlandBelowBlock:
+        name: 锄头在非空气方块下也能耕地
+        desc: 当泥土类方块上方为冰块, 水, 或者基岩时, 锄头也能耕地
+        extra:
+          '0': 可能在制作西瓜南瓜机有用处

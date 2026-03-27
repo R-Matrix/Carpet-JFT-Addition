@@ -208,5 +208,97 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 
 - 类型: `boolean`
 - 默认值: `true`
+- 参考选项: `true`, `false`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 发光地衣可吞噬方块 (glowLichenCanShadowBlocks)
+
+当活塞推动一个方块时，如果该方块的推动方向那一面附着有发光地衣, 发光地衣到位处的方块会消失.
+
+发光地衣到位后仍会产生更新
+
+只能是推动方向,  拉回方向发光地衣会被破坏
+
+- 类型: `boolean`
+- 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `SURVIVAL`, `JFT`  
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`
+
+
+## 告示牌放下后文字总发光 (signTextGlowingAlways)
+
+放下的告示牌文字总是使用荧光墨囊那样高亮显示
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 湿海绵在炎热群系蒸干 (wetSpongeDriesOnDesertAndBedLands)
+
+湿海绵可以在沙漠或恶地(及其变种)群系蒸干, 就像在下界一样.
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 干草块喂食得到尖啸山羊 (goatHayFeedingAndChildScreaming)
+
+通过给山羊喂食干草捆可以让其生出尖啸山羊
+
+在原版中, 当父母都不是尖啸山羊时, 子代只有0.2%的概率时尖啸山羊
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 海龟蛋在干海带块上加速孵化 (turtleEggsDriedKelpBlockFaster)
+
+海龟蛋放在干海带块上可以加速孵化, 时间大概缩短到10min.
+
+原版中, 当海龟蛋放到沙子中时, 海龟蛋大概需要90min才能孵化.
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 动物生成数量上限 (animalsSpanLimit)
+
+修改动物自然生成的数量上限, 原版为10
+
+- 类型: `int`
+- 默认值: `10`
+- 参考选项: `10`, `20`, `40`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 设置动物是否为稀有生成 (animalsRaleSetting)
+
+设置动物的生成是否属于稀有生成
+
+稀有生成会限制20s尝试生成一次, 非稀有为1gt尝试生成一次
+
+- 类型: `boolean`
+- 默认值: `true`
+- 参考选项: `true`, `false`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 锄头在非空气方块下也能耕地 (canTillFarmlandBelowBlock)
+
+当泥土类方块上方为冰块, 水, 或者基岩时, 锄头也能耕地
+
+可能在制作西瓜南瓜机有用处
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`

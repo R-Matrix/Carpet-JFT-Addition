@@ -91,6 +91,6 @@ carpetjftaddition:
       animalsRaleSetting:
         name: animalsRaleSetting
         desc: animalsRaleSetting
-      canTillFarmlandBelowBlockList:
-        name: canTillFarmlandBelowBlockList
+      canTillFarmlandBelowBlock:
+        name: canTillFarmlandBelowBlock
         desc: canTillFarmlandBelowBlockList(Water, Ice, Bedrock)

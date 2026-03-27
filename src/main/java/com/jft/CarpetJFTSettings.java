@@ -135,7 +135,7 @@ public class CarpetJFTSettings {
     public static boolean wetSpongeDriesOnDesertAndBedLands = false;
 
 
-    @Rule(categories = {SURVIVAL, "JFT"})
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean goatHayFeedingAndChildScreaming = false;
 
 
@@ -154,6 +154,6 @@ public class CarpetJFTSettings {
     public static boolean animalsRaleSetting = true;
 
     @Rule(categories = {SURVIVAL, "JFT"})
-    public static boolean canTillFarmlandBelowBlockList = false;
+    public static boolean canTillFarmlandBelowBlock = false;
 
 }
