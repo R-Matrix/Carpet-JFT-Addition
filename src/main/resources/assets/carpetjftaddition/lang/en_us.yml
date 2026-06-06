@@ -94,3 +94,6 @@ carpetjftaddition:
       canTillFarmlandBelowBlock:
         name: canTillFarmlandBelowBlock
         desc: canTillFarmlandBelowBlockList(Water, Ice, Bedrock)
+      shulkerBaseTickIfOnTwistingVine:
+        name: shulkerBaseTickIfOnTwistingVine
+        desc: shulker can only do base tick action if it is on twisting vine.

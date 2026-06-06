@@ -156,4 +156,7 @@ public class CarpetJFTSettings {
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean canTillFarmlandBelowBlock = false;
 
+    @Rule(categories = {SURVIVAL, FEATURE, "JFT"})
+    public static boolean shulkerBaseTickIfOnTwistingVine = false;
+
 }
