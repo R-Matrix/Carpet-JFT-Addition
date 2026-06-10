@@ -1,4 +1,4 @@
-package com.jft.mixin.rules;
+package com.jft.mixin.rules.shulkerBaseTickIfOnTwistingVine;
 
 import com.jft.CarpetJFTSettings;
 import net.minecraft.block.Blocks;

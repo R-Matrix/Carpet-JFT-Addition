@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "example.ExampleMixin",
-    "rules.shulkerEntityMixin",
     "rules.allowAmethystBudCanGrowAtWater.BuddingAmethystBlockMixin",
     "rules.amethystPistonBehaviorNormal.PistonBlockMixin",
     "rules.amethystPistonBehaviorNormal.PistonHandlerMixin",
@@ -26,6 +25,7 @@
     "rules.impalingWaterContact.EnchantmentMixin",
     "rules.reinforcementAttributeInit.zombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",
+    "rules.shulkerBaseTickIfOnTwistingVine.shulkerEntityMixin",
     "rules.signTextGlowingAlways.SignTextMixin",
     "rules.tridentMultipleDamage.PersistentProjectileEntityApplyCollisionMixin",
     "rules.turtleEggsDriedKelpBlockFaster.TurtleEggsMixin",

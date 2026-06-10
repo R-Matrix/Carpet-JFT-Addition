@@ -302,3 +302,17 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 默认值: `false`
 - 参考选项: `false`, `true`
 - 分类: `SURVIVAL`, `JFT`
+
+
+## 潜影贝在缠怨藤中只进行 baseTick 活动 (shulkerBaseTickIfOnTwistingVine)
+
+在 12800HX 原版中堆叠 2444 只潜影贝为 825 mspt, 开启后约为 3-4 mspt
+
+开启后, 在缠怨藤中的潜影贝不会试图传送或索敌, 不会上下矿车.
+
+开启后, 客户端在使用矿车运输潜影贝时, 潜影贝尝试下车到缠怨藤时会出现渲染错误. 退出重进即可正常, 不会影响潜影贝下车的位置.
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`
