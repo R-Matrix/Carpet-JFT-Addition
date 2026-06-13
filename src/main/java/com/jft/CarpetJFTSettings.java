@@ -153,10 +153,20 @@ public class CarpetJFTSettings {
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean animalsRaleSetting = true;
 
+
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean canTillFarmlandBelowBlock = false;
+
 
     @Rule(categories = {SURVIVAL, FEATURE, "JFT"})
     public static boolean shulkerBaseTickIfOnTwistingVine = false;
 
+
+    @Rule(options = {"false", "true", "allowEmptyHand"},
+            categories = {SURVIVAL, "JFT"})
+    public static String interceptItemFrameDrop = "false";
+
+
+    @Rule(categories = {SURVIVAL, "JFT"})
+    public static boolean canArrowDamageItemFrame = false;
 }

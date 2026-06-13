@@ -316,3 +316,27 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 默认值: `false`
 - 参考选项: `false`, `true`
 - 分类: `SURVIVAL`, `JFT`, `FEATURE`
+
+
+## 阻止打掉物品展示框 (interceptItemFrameDrop)
+
+当物品展示框附着于灰色混凝土或干海带块时, 非创造模式的玩家无法破坏展示框, 除非他们主手拿着白名单物品.
+
+白名单物品有物品展示框, 发光物品展示框, 镐子, 斧子
+
+只影响破坏物品展示框, 从物品展示框中拿下物品不受影响
+
+- 类型: `string`
+- 默认值: `false`
+- 参考选项: `false`, `true`, `allowEmptyHand`
+- 分类: `SURVIVAL`, `JFT`
+
+
+## 箭类弹射物是否伤害物品展示框 (canArrowDamageItemFrame)
+
+当物品展示框附着于灰色混凝土或干海带块时, 如果物品展示框中有物品展示, 那么弹射物不会将物品展示框中的物品射下.
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`

@@ -97,3 +97,9 @@ carpetjftaddition:
       shulkerBaseTickIfOnTwistingVine:
         name: shulkerBaseTickIfOnTwistingVine
         desc: shulker can only do base tick action if it is on twisting vine.
+      interceptItemFrameDrop:
+        name: interceptItemFrameDrop
+        desc: interceptItemFrameDrop
+      canArrowDamageItemFrame:
+        name: canArrowDamageItemFrame
+        desc: canArrowDamageItemFrame
