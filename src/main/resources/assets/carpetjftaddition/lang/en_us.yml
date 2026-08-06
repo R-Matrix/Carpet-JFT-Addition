@@ -103,3 +103,15 @@ carpetjftaddition:
       canArrowDamageItemFrame:
         name: canArrowDamageItemFrame
         desc: canArrowDamageItemFrame
+      spawnEggYellowGlassSmallVariant:
+        name: spawnEggYellowGlassSmallVariant
+        desc: Spawn eggs used on yellow stained glass always spawn the small variant (baby animals/zombies, small slimes).
+        extra:
+          '0': If the spawn egg has custom entity data (minecraft:entity_data), this rule is ignored.
+          '1': Only affects mobs that support baby/size variants (animals, zombies, slimes).
+      spawnEggGreenGlassLargeVariant:
+        name: spawnEggGreenGlassLargeVariant
+        desc: Spawn eggs used on green stained glass always spawn the large variant (adult animals/zombies, large slimes).
+        extra:
+          '0': If the spawn egg has custom entity data (minecraft:entity_data), this rule is ignored.
+          '1': Slimes spawn as large slimes (Size 4), other mobs spawn as adults.

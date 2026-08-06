@@ -169,4 +169,12 @@ public class CarpetJFTSettings {
 
     @Rule(categories = {SURVIVAL, "JFT"})
     public static boolean canArrowDamageItemFrame = false;
+
+
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
+    public static boolean spawnEggYellowGlassSmallVariant = false;
+
+
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
+    public static boolean spawnEggGreenGlassLargeVariant = false;
 }

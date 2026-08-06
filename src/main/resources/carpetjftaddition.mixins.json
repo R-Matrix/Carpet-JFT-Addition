@@ -29,6 +29,7 @@
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",
     "rules.shulkerBaseTickIfOnTwistingVine.shulkerEntityMixin",
     "rules.signTextGlowingAlways.SignTextMixin",
+    "rules.spawnBabyEntityOnYellowGlass.SpawnEggItemMixin",
     "rules.tridentMultipleDamage.PersistentProjectileEntityApplyCollisionMixin",
     "rules.turtleEggsDriedKelpBlockFaster.TurtleEggsMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin",

@@ -340,3 +340,30 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 默认值: `false`
 - 参考选项: `false`, `true`
 - 分类: `SURVIVAL`, `JFT`
+
+
+## 黄色染色玻璃召唤小型变种 (spawnEggYellowGlassSmallVariant)
+
+在黄色染色玻璃上使用刷怪蛋召唤生物时, 召唤出的生物一定为小型变种 (动物/僵尸为幼年, 史莱姆为小型)
+
+若刷怪蛋带有自定义实体标签 (minecraft:entity_data), 则忽略此规则, 以标签为准.
+仅对支持幼年或体型的生物生效 (如动物, 僵尸, 史莱姆).
+不适用于刷怪笼, 水面/岩浆召唤, 以及对已有生物使用刷怪蛋.
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`
+
+
+## 绿色染色玻璃召唤大型生物 (spawnEggGreenGlassLargeVariant)
+
+在绿色染色玻璃上使用刷怪蛋召唤生物时, 召唤出的生物一定为大型变种 (动物/僵尸为成年, 史莱姆为大型)
+
+若刷怪蛋带有自定义实体标签 (minecraft:entity_data), 则忽略此规则, 以标签为准.
+史莱姆会被召唤为大型史莱姆 (Size 4), 其余生物为成年体.
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`

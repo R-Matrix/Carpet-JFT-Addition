@@ -138,3 +138,16 @@ carpetjftaddition:
       canArrowDamageItemFrame:
         name: 箭类弹射物是否伤害物品展示框
         desc: 当物品展示框附着于灰色混凝土或干海带块时, 如果物品展示框中有物品展示, 那么弹射物不会将物品展示框中的物品射下.
+      spawnEggYellowGlassSmallVariant:
+        name: 黄色染色玻璃召唤小型变种
+        desc: 在黄色染色玻璃上使用刷怪蛋召唤生物时, 召唤出的生物一定为小型变种 (动物/僵尸为幼年, 史莱姆为小型)
+        extra:
+          '0': 若刷怪蛋带有自定义实体标签 (minecraft:entity_data), 则忽略此规则, 以标签为准
+          '1': 仅对支持幼年或体型的生物生效 (如动物, 僵尸, 史莱姆)
+          '2': 不适用于刷怪笼, 水面/岩浆召唤, 以及对已有生物使用刷怪蛋
+      spawnEggGreenGlassLargeVariant:
+        name: 绿色染色玻璃召唤大型生物
+        desc: 在绿色染色玻璃上使用刷怪蛋召唤生物时, 召唤出的生物一定为大型变种 (动物/僵尸为成年, 史莱姆为大型)
+        extra:
+          '0': 若刷怪蛋带有自定义实体标签 (minecraft:entity_data), 则忽略此规则, 以标签为准
+          '1': 史莱姆会被召唤为大型史莱姆 (Size 4), 其余生物为成年体
