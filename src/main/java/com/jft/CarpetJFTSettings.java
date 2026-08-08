@@ -177,4 +177,11 @@ public class CarpetJFTSettings {
 
     @Rule(categories = {SURVIVAL, "JFT", FEATURE})
     public static boolean spawnEggGreenGlassLargeVariant = false;
+
+
+    @Rule(options = {"1", "5", "10"},
+            strict = false,
+            validators = {Validators.NonNegativeNumber.class, jft_intValidator.class},
+            categories = {SURVIVAL, "JFT"})
+    public static int trialSpawnerRecognitionSLPlayerAsMul = 1;
 }

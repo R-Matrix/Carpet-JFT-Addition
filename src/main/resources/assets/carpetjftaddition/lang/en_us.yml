@@ -115,3 +115,9 @@ carpetjftaddition:
         extra:
           '0': If the spawn egg has custom entity data (minecraft:entity_data), this rule is ignored.
           '1': Slimes spawn as large slimes (Size 4), other mobs spawn as adults.
+      trialSpawnerRecognitionSLPlayerAsMul:
+        name: trialSpawnerRecognitionSLPlayerAsMul
+        desc: Fake Players whose name starts with bot_sljr count as multiple players for trial spawner mobs and rewards (normal and ominous).
+        extra:
+          '0': Setting to 10 makes 1 bot player equivalent to 10 players for total/simultaneous mob counts, and ejects 10 reward items instead of 1.
+          '1': Set to 1 for vanilla behavior.

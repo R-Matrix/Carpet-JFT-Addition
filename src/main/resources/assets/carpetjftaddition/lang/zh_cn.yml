@@ -151,3 +151,9 @@ carpetjftaddition:
         extra:
           '0': 若刷怪蛋带有自定义实体标签 (minecraft:entity_data), 则忽略此规则, 以标签为准
           '1': 史莱姆会被召唤为大型史莱姆 (Size 4), 其余生物为成年体
+      trialSpawnerRecognitionSLPlayerAsMul:
+        name: 试炼刷怪笼识别SL假人按倍数计入战斗人数(假人以一当十)
+        desc: 名字前缀为 bot_sljr 的假人在试炼刷怪笼及不详试炼刷怪笼中按指定倍数计入战斗人数, 奖励也按倍数弹出
+        extra:
+          '0': 设为 10 时, 1 个假人等效 10 个玩家, 总怪物数/同屏怪物数按 10 人计算, 结束阶段一次弹出 10 份奖励
+          '1': 设为 1 即原版行为
