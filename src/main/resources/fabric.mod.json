@@ -9,7 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://github.com/R_Matrix/Carpet-JFT-Addition",
-		"sources": "https://github.com/R_Matrix/Carpet-JFT-Addition"
+		"sources": "https://github.com/R_Matrix/Carpet-JFT-Addition",
+		"issues": "https://github.com/R-Matrix/Carpet-JFT-Addition/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/carpetjftaddition/icon.png",
