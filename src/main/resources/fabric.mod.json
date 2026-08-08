@@ -8,18 +8,18 @@
 		"F_4_Fddsz"
 	],
 	"contact": {
-		"homepage": "https://github.com/shudpaa/Carpet-JFT-Addition",
-		"sources": "https://github.com/shudpaa/Carpet-JFT-Addition"
+		"homepage": "https://github.com/R_Matrix/Carpet-JFT-Addition",
+		"sources": "https://github.com/R_Matrix/Carpet-JFT-Addition"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/carpetjftaddition/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.jft.CarpetJFTAddition"
+			"xyz.water.rmatrix.mod.carpetjftaddition.CarpetJFTAddition"
 		],
 		"fabric-datagen": [
-			"com.jft.CarpetJFTAdditionDataGenerator"
+			"xyz.water.rmatrix.mod.carpetjftaddition.CarpetJFTAdditionDataGenerator"
 		]
 	},
 	"mixins": [

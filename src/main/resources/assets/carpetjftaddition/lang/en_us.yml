@@ -101,8 +101,8 @@ carpetjftaddition:
         name: interceptItemFrameDrop
         desc: interceptItemFrameDrop
       canArrowDamageItemFrame:
-        name: canArrowDamageItemFrame
-        desc: canArrowDamageItemFrame
+        name: CanArrowDamageItemFrame
+        desc: CanArrowDamageItemFrame
       spawnEggYellowGlassSmallVariant:
         name: spawnEggYellowGlassSmallVariant
         desc: Spawn eggs used on yellow stained glass always spawn the small variant (baby animals/zombies, small slimes).
