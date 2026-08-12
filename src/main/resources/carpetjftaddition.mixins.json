@@ -2,6 +2,7 @@
   "required": true,
   "package": "xyz.water.rmatrix.mod.carpetjftaddition.mixin",
   "compatibilityLevel": "JAVA_21",
+  "plugin": "xyz.water.rmatrix.mod.carpetjftaddition.JFTMixinConfigPlugin",
   "mixins": [
     "example.ExampleMixin",
     "rules.allowAmethystBudCanGrowAtWater.BuddingAmethystBlockMixin",
@@ -25,6 +26,7 @@
     "rules.glowLichenCanShadowBlocks.PistonHandlerMixin",
     "rules.goatHayFeedingAndChildScreaming.GoatEntityMixin",
     "rules.impalingWaterContact.EnchantmentMixin",
+    "rules.impalingWaterContact.EnchantmentHelperMixin",
     "rules.interceptItemFrameDrop.AttackInvisibleItemFrameMixin",
     "rules.reinforcementAttributeInit.ZombieEntityInitAttrMixin",
     "rules.riptideTouchingWater.RiptideFlagManagerMixin",
