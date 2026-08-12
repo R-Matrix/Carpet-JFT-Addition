@@ -26,7 +26,8 @@ loom {
 	runs {
 		serverMixinAudit {
 			server()
-			vmArgs(*commonVmArgs, '-DmixinAuditor.audit=true', '-DmixinAuditor.when=game_init')
+			// 默认 when=mod_init: 模组加载阶段即审计退出, 不等服务器 initServer 完成
+			vmArgs(*commonVmArgs, '-DmixinAuditor.audit=true')
 		}
 	}
 }

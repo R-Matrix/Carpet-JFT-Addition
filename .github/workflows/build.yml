@@ -50,10 +50,12 @@ jobs:
           BUILD_RELEASE: ${{ inputs.release }}
       - name: run mixin audit
         if: ${{ inputs.mixin_audit }}
+        timeout-minutes: 30
         run: |
           for v in $(jq -r '.versions[]' settings.json); do
             mkdir -p "versions/$v/run"
             echo eula=true > "versions/$v/run/eula.txt"
+            echo ">>> mixin audit for $v"
             gradle ":$v:runServerMixinAudit"
           done
       - name: upload artifacts
