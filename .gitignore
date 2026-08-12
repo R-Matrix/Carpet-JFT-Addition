@@ -32,6 +32,9 @@ bin/
 
 run/
 
+# temp files (e.g. cloned reference repos)
+tmp/
+
 # java
 
 hs_err_*.log

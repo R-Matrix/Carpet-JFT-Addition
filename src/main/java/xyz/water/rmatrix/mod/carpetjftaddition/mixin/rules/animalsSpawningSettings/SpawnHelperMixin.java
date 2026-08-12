@@ -12,7 +12,11 @@ import static xyz.water.rmatrix.mod.carpetjftaddition.CarpetJFTSettings.animalsR
 @Mixin(SpawnHelper.class)
 public class SpawnHelperMixin {
 
+    //#if MC >= 12102
     @WrapOperation(method = "collectSpawnableGroups", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/SpawnGroup;isRare()Z"))
+    //#else
+    //$$ @WrapOperation(method = "spawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/SpawnGroup;isRare()Z"))
+    //#endif
     private static boolean se(SpawnGroup instance, Operation<Boolean> original){
 
         if(instance.getName().equals("creature")){

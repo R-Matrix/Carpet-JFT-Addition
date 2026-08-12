@@ -32,8 +32,18 @@ public abstract class AttackInvisibleItemFrameMixin extends AbstractDecorationEn
         super(entityType, world);
     }
 
-    @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/decoration/AbstractDecorationEntity;damage(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 1), cancellable = true)
+    @Inject(method = "damage", at = @At(value = "INVOKE",
+            //#if MC >= 12102
+            target = "Lnet/minecraft/entity/decoration/AbstractDecorationEntity;damage(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/damage/DamageSource;F)Z",
+            //#else
+            //$$ target = "Lnet/minecraft/entity/decoration/AbstractDecorationEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z",
+            //#endif
+            ordinal = 1), cancellable = true)
+    //#if MC >= 12102
     private void interceptItemFrameDrop(ServerWorld world, DamageSource source, float amount, @NotNull CallbackInfoReturnable<Boolean> cir){
+    //#else
+    //$$ private void interceptItemFrameDrop(DamageSource source, float amount, @NotNull CallbackInfoReturnable<Boolean> cir){
+    //#endif
         if(interceptItemFrameDrop.equals("false")) return;
         BlockState blockState = this.getWorld().getBlockState(this.attachedBlockPos.offset(this.facing.getOpposite()));
         if(!Jft$canInterceptItemFrameDropBlock.contains(blockState)) return;

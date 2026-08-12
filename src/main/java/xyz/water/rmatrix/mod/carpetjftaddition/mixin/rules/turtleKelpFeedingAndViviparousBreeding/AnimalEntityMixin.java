@@ -27,8 +27,10 @@ public abstract class AnimalEntityMixin extends PassiveEntity {
     @Shadow
     public abstract void lovePlayer(@Nullable PlayerEntity player);
 
+    //#if MC >= 12102
     @Shadow
     protected abstract void playEatSound();
+    //#endif
 
     @Shadow
     public abstract boolean canEat();
