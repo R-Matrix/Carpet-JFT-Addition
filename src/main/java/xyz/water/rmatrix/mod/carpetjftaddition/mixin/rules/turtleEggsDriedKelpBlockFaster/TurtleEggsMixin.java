@@ -72,7 +72,11 @@ public class TurtleEggsMixin {
 
                 for (int j = 0; j < state.get(EGGS); j++) {
                     world.syncWorldEvent(WorldEvents.BLOCK_BROKEN, pos, Block.getRawIdFromState(state));
+                    //#if MC >= 12102
                     TurtleEntity turtleEntity = EntityType.TURTLE.create(world, SpawnReason.BREEDING);
+                    //#else
+                    //$$ TurtleEntity turtleEntity = EntityType.TURTLE.create(world);
+                    //#endif
                     if (turtleEntity != null) {
                         turtleEntity.setBreedingAge(-24000);
                         turtleEntity.setHomePos(pos);

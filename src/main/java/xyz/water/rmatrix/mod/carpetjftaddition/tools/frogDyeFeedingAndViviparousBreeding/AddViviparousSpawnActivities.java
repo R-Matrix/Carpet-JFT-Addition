@@ -20,11 +20,19 @@ public class AddViviparousSpawnActivities implements FrogBrainInvoker {
                 FrogViviparousActivity.VIVIPAROUS_ACTIVITY,
                 ImmutableList.of(
                         Pair.of(0, LookAtMobWithIntervalTask.follow(EntityType.PLAYER, 6.0F, UniformIntProvider.create(30, 60))),
+                        //#if MC >= 12102
                         Pair.of(1,
                                 UpdateAttackTargetTask.create(
                                         (world, frog) -> FrogBrainInvoker.isNotBreeding(frog), (world, frog) -> frog.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_ATTACKABLE)
                                 )
                         ),
+                        //#else
+                        //$$ Pair.of(1,
+                        //$$         UpdateAttackTargetTask.create(
+                        //$$                 (frog) -> FrogBrainInvoker.isNotBreeding(frog), (frog) -> frog.getBrain().getOptionalRegisteredMemory(MemoryModuleType.NEAREST_ATTACKABLE)
+                        //$$         )
+                        //$$ ),
+                        //#endif
                         Pair.of(2, FrogSpanChildTask.create()),
                         Pair.of(3,
                                 new RandomTask<>(

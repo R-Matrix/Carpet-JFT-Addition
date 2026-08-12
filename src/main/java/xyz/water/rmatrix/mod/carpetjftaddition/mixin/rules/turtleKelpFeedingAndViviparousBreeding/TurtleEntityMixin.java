@@ -41,9 +41,17 @@ public abstract class TurtleEntityMixin extends AnimalEntityMixin implements Con
             if (!this.getWorld().isClient && i == 0 && this.canEat()) {
                 this.eat(player, hand, itemStack);
                 this.lovePlayer(player);
+                //#if MC >= 12102
                 this.playEatSound();
+                //#else
+                //$$ // 1.21.1 的 AnimalEntity 交互流程不播放进食音效, 保持原版行为即可
+                //#endif
                 this.setJft$shouldBeViviparous(true);
+                //#if MC >= 12102
                 return ActionResult.SUCCESS_SERVER;
+                //#else
+                //$$ return ActionResult.SUCCESS;
+                //#endif
             }
         }
         return super.jft$interactMobHook(player, hand, original);

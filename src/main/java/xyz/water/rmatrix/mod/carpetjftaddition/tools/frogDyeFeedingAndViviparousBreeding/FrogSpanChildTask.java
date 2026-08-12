@@ -26,8 +26,13 @@ public class FrogSpanChildTask {
                                         (world, entity, time) -> {
                                     if (entity.isOnGround()) {
                                         int flagValue = context.getValue(dyeFlag);
+                                        //#if MC >= 12102
                                         FrogEntity frogBaby = EntityType.FROG.create(world, SpawnReason.BREEDING);
+                                        //#else
+                                        //$$ FrogEntity frogBaby = EntityType.FROG.create(world);
+                                        //#endif
                                         if(frogBaby != null) {
+                                            //#if MC >= 12102
                                             RegistryEntry<FrogVariant> variant = switch (flagValue) {
                                                 case 1 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.COLD);
                                                 case 2 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.WARM);
@@ -35,6 +40,15 @@ public class FrogSpanChildTask {
                                             };
 
                                             frogBaby.setVariant(variant);
+                                            //#else
+                                            //$$ RegistryEntry<FrogVariant> variant = switch (flagValue) {
+                                            //$$     case 1 -> Registries.FROG_VARIANT.getEntry(FrogVariant.COLD).orElseThrow();
+                                            //$$     case 2 -> Registries.FROG_VARIANT.getEntry(FrogVariant.WARM).orElseThrow();
+                                            //$$     default -> Registries.FROG_VARIANT.getEntry(FrogVariant.TEMPERATE).orElseThrow();
+                                            //$$ };
+                                            //$$
+                                            //$$ frogBaby.setVariant(variant);
+                                            //#endif
                                             frogBaby.setPos(entity.getX(), entity.getY(), entity.getZ());
                                             world.spawnEntity(frogBaby);
 
