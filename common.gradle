@@ -82,7 +82,7 @@ dependencies {
 	})
 
 	// Mixin 审计: 仅运行时使用 (CI 的 runServerMixinAudit), 不进发布 jar
-	modRuntimeOnly("me.fallenbreath:mixin-auditor:0.2.0-u") {
+	modRuntimeOnly("me.fallenbreath:mixin-auditor:0.2.0-o") {
 		exclude group: "net.fabricmc.fabric-api"
 	}
 
