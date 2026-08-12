@@ -1,19 +1,23 @@
-# Automatically build the project and run any configured tests for every push
-# and submitted pull request. This can help catch issues that only occur on
-# certain platforms or Java versions, and provides a first line of defence
-# against bad commits.
-
-name: build
+# 可复用的构建工作流: 由 gradle.yml (开发构建) 与 release.yml (发布) 调用
+name: _step.build
 on:
-  push:
-    branches:
-      - main
-      - master
-      - dev
-  pull_request:
-    branches:
-      - main
-      - master
+  workflow_call:
+    inputs:
+      release:
+        description: 是否为发布构建 (影响版本后缀)
+        type: boolean
+        required: false
+        default: false
+      target_subproject:
+        description: 要构建的版本子项目, 逗号分隔; 留空则构建全部
+        type: string
+        required: false
+        default: ''
+      mixin_audit:
+        description: 是否运行 mixin 审计 (需 common.gradle 配置 runServerMixinAudit)
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build:
@@ -21,19 +25,39 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
-      - name: validate gradle wrapper
-        uses: gradle/actions/wrapper-validation@v4
       - name: setup jdk
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'microsoft'
-      - name: make gradle wrapper executable
-        run: chmod +x ./gradlew
-      - name: build
-        run: ./gradlew build
-      - name: capture build artifacts
+      - name: setup gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.0'
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/dev' }}
+      - name: build with gradle
+        run: |
+          if [ -z "${{ inputs.target_subproject }}" ]; then
+            echo "Building all subprojects"
+            gradle build
+          else
+            args=$(echo "${{ inputs.target_subproject }}" | tr ',' '\n' | sed 's/$/:build/' | paste -sd ' ')
+            echo "Building with arguments=$args"
+            gradle $args
+          fi
+        env:
+          BUILD_ID: ${{ github.run_number }}
+          BUILD_RELEASE: ${{ inputs.release }}
+      - name: run mixin audit
+        if: ${{ inputs.mixin_audit }}
+        run: |
+          for v in $(jq -r '.versions[]' settings.json); do
+            mkdir -p "versions/$v/run"
+            echo eula=true > "versions/$v/run/eula.txt"
+            gradle ":$v:runServerMixinAudit"
+          done
+      - name: upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Artifacts
-          path: build/libs/
+          name: build-artifacts
+          path: versions/*/build/libs/

@@ -5,11 +5,30 @@ apply plugin: 'net.fabricmc.fabric-loom-remap'
 apply plugin: 'com.replaymod.preprocess'
 apply plugin: 'me.fallenbreath.yamlang'
 
-version = project.mod_version + '-mc' + project.minecraft_version
+// 构建版本后缀: 发布构建不带后缀, CI 开发构建 +build.<序号>, 本地构建 -SNAPSHOT (与 Igny 一致)
+String modVersionSuffix = ''
+if (System.getenv("BUILD_RELEASE") != "true") {
+	String buildNumber = System.getenv("BUILD_ID")
+	modVersionSuffix += buildNumber != null ? ('+build.' + buildNumber) : '-SNAPSHOT'
+}
+String fullModVersion = project.mod_version + modVersionSuffix
+
+version = project.mod_version + '-mc' + project.minecraft_version + modVersionSuffix
 group = project.maven_group
 
 base {
 	archivesName = project.archives_base_name
+}
+
+loom {
+	// mixin 审计运行配置: 启动服务器检查所有 mixin 注入是否真实生效
+	def commonVmArgs = ['-Dmixin.debug.export=true', '-Dmixin.debug.countInjections=false']
+	runs {
+		serverMixinAudit {
+			server()
+			vmArgs(*commonVmArgs, '-DmixinAuditor.audit=true', '-DmixinAuditor.when=game_init')
+		}
+	}
 }
 
 repositories {
@@ -62,13 +81,18 @@ dependencies {
 		transitive = false
 	})
 
+	// Mixin 审计: 仅运行时使用 (CI 的 runServerMixinAudit), 不进发布 jar
+	modRuntimeOnly("me.fallenbreath:mixin-auditor:0.2.0-u") {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+
 	implementation 'com.google.code.gson:gson:2.10.1'
 	implementation 'commons-io:commons-io:2.15.1'
 	implementation 'com.google.guava:guava:32.1.3-jre'
 }
 
 processResources {
-	inputs.property "version", project.mod_version
+	inputs.property "version", fullModVersion
 	inputs.property "minecraft_dependency", project.minecraft_dependency
 
 	filesMatching("fabric.mod.json") {

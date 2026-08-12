@@ -1,0 +1,32 @@
+# 生成版本构建矩阵: 扫描 settings.json 的版本列表, 可按 TARGET_SUBPROJECT 过滤
+name: _step.matrix_prepare
+on:
+  workflow_call:
+    inputs:
+      target_subproject:
+        description: 要构建的版本子项目, 逗号分隔; 留空则全部
+        type: string
+        required: false
+        default: ''
+    outputs:
+      matrix:
+        description: 生成的构建矩阵
+        value: ${{ jobs.matrix_prep.outputs.matrix }}
+
+jobs:
+  matrix_prep:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: generate version matrix
+        id: setmatrix
+        run: python .github/workflows/scripts/matrix.py
+        env:
+          TARGET_SUBPROJECT: ${{ inputs.target_subproject }}
+    outputs:
+      matrix: ${{ steps.setmatrix.outputs.matrix }}

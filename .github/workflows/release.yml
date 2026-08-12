@@ -1,50 +1,61 @@
+# 发布: 按版本矩阵并行构建, 汇总所有 jar 创建 Release
 name: release
-
-# 只有当推送标签时才运行
 on:
   push:
     tags:
       - 'v*'
 
-# 设置工作流的权限
 permissions:
-  contents: write  # 允许创建 release 和上传文件
+  contents: write
 
 jobs:
-  release:
-    runs-on: ubuntu-24.04
+  matrix_prep:
+    uses: ./.github/workflows/matrix_prep.yml
 
+  build:
+    needs: matrix_prep
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
     steps:
-      # 1. 检出代码
       - name: checkout repository
         uses: actions/checkout@v4
-
-      # 2. 设置 JDK
       - name: setup jdk
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'microsoft'
+      - name: setup gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.0'
+          cache-read-only: true
+      - name: build ${{ matrix.subproject }}
+        run: gradle :${{ matrix.subproject }}:build
+        env:
+          BUILD_ID: ${{ github.run_number }}
+          BUILD_RELEASE: 'true'
+      - name: upload ${{ matrix.subproject }} jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-${{ matrix.subproject }}
+          path: versions/${{ matrix.subproject }}/build/libs/*.jar
 
-      # 3. 给 gradlew 添加执行权限
-      - name: make gradle wrapper executable
-        run: chmod +x ./gradlew
-
-      # 4. 构建模组
-      - name: build
-        run: ./gradlew build
-
-      # 5. 创建 Release 并上传构建产物
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: download all jars
+        uses: actions/download-artifact@v4
+        with:
+          path: release-jars
+          merge-multiple: true
       - name: create release
         uses: softprops/action-gh-release@v2
         with:
-          # 上传所有 jar 文件
-          files: |
-            build/libs/*.jar
-          # 自动生成 release 标题和说明
+          files: release-jars/*.jar
           generate_release_notes: true
-          # 可以自定义 release 名称，例如 "Release v1.0.0"
           name: Carpet JFT Addition ${{ github.ref_name }}
         env:
-          # 使用 GitHub 自动提供的 token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
