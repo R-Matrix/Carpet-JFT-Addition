@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: setup jdk
         uses: actions/setup-java@v4
         with:
@@ -48,6 +50,64 @@ jobs:
         env:
           BUILD_ID: ${{ github.run_number }}
           BUILD_RELEASE: ${{ inputs.release }}
+      - name: detect enchantment-related changes
+        id: detect_enchantment
+        shell: bash
+        env:
+          CI_EVENT_NAME: ${{ github.event_name }}
+          CI_BEFORE_SHA: ${{ github.event.before }}
+          CI_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          CI_HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          case "$CI_EVENT_NAME" in
+            pull_request)
+              changed_files=$(git diff --name-only "$CI_BASE_SHA" "$CI_HEAD_SHA")
+              ;;
+            push)
+              if [[ "$CI_BEFORE_SHA" =~ ^0+$ ]]; then
+                changed_files=$(git diff-tree --no-commit-id --name-only -r --root "$CI_HEAD_SHA")
+              else
+                changed_files=$(git diff --name-only "$CI_BEFORE_SHA" "$CI_HEAD_SHA")
+              fi
+              ;;
+            workflow_dispatch)
+              echo 'run=true' >> "$GITHUB_OUTPUT"
+              echo 'Manual dispatch: run GameTest.'
+              exit 0
+              ;;
+            *)
+              changed_files=$(git diff --name-only HEAD^ HEAD)
+              ;;
+          esac
+
+          echo 'Changed files:'
+          printf '%s\n' "$changed_files"
+
+          if printf '%s\n' "$changed_files" | grep -Eiq '(^|/)(src/testmod/|.*enchantment.*|.*impalingWaterContact.*|.*channelingWeather.*)'; then
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+            echo 'Enchantment-related changes detected; run GameTest.'
+          else
+            echo 'run=false' >> "$GITHUB_OUTPUT"
+            echo 'No Enchantment-related changes detected; skip GameTest.'
+          fi
+      - name: run GameTest
+        if: ${{ steps.detect_enchantment.outputs.run == 'true' }}
+        timeout-minutes: 30
+        run: |
+          if [ -n "${{ inputs.target_subproject }}" ]; then
+            versions=$(echo "${{ inputs.target_subproject }}" | tr ',' ' ')
+          else
+            versions=$(jq -r '.versions[]' settings.json)
+          fi
+
+          for v in $versions; do
+            mkdir -p "versions/$v/run"
+            echo eula=true > "versions/$v/run/eula.txt"
+            echo ">>> GameTest for $v"
+            gradle ":$v:runGameTest"
+          done
       - name: run mixin audit
         if: ${{ inputs.mixin_audit }}
         timeout-minutes: 30

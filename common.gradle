@@ -20,6 +20,14 @@ base {
 	archivesName = project.archives_base_name
 }
 
+// 游戏测试源码集: 只用于 runGameTest, 不进发布 jar
+sourceSets {
+	testmod {
+		compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+		runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+	}
+}
+
 loom {
 	// mixin 审计运行配置: 启动服务器检查所有 mixin 注入是否真实生效
 	def commonVmArgs = ['-Dmixin.debug.export=true', '-Dmixin.debug.countInjections=false']
@@ -28,6 +36,11 @@ loom {
 			server()
 			// 默认 when=mod_init: 模组加载阶段即审计退出, 不等服务器 initServer 完成
 			vmArgs(*commonVmArgs, '-DmixinAuditor.audit=true')
+		}
+		gameTest {
+			server()
+			source sourceSets.testmod
+			vmArg '-Dfabric-api.gametest'
 		}
 	}
 }

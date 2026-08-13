@@ -1,0 +1,19 @@
+{
+	"schemaVersion": 1,
+	"id": "carpetjftaddition-testmod",
+	"version": "1.0.0",
+	"name": "Carpet JFT Addition Game Test",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"xyz.water.rmatrix.mod.carpetjftaddition.test.ImpalingWaterContactGameTest"
+		]
+	},
+	"depends": {
+		"carpetjftaddition": "*",
+		"fabric-api": "*",
+		"fabricloader": ">=0.17.0",
+		"minecraft": "*",
+		"java": ">=21"
+	}
+}
