@@ -7,8 +7,7 @@ import carpet.api.settings.Validators;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
 
-import static carpet.api.settings.RuleCategory.FEATURE;
-import static carpet.api.settings.RuleCategory.SURVIVAL;
+import static carpet.api.settings.RuleCategory.*;
 
 public class CarpetJFTSettings {
 
@@ -171,17 +170,17 @@ public class CarpetJFTSettings {
     public static boolean canArrowDamageItemFrame = false;
 
 
-    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
+    @Rule(categories = {CREATIVE, "JFT", FEATURE})
     public static boolean spawnEggYellowGlassSmallVariant = false;
 
 
-    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
+    @Rule(categories = {CREATIVE, "JFT", FEATURE})
     public static boolean spawnEggGreenGlassLargeVariant = false;
 
 
     @Rule(options = {"1", "5", "10"},
             strict = false,
             validators = {Validators.NonNegativeNumber.class, jft_intValidator.class},
-            categories = {SURVIVAL, "JFT"})
+            categories = {SURVIVAL, "JFT", FEATURE})
     public static int trialSpawnerRecognitionSLPlayerAsMul = 1;
 }

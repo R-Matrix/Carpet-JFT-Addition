@@ -353,7 +353,7 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `SURVIVAL`, `JFT`, `FEATURE`
+- 分类: `CREATIVE`, `JFT`, `FEATURE`
 
 
 ## 绿色染色玻璃召唤大型生物 (spawnEggGreenGlassLargeVariant)
@@ -366,7 +366,7 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `boolean`
 - 默认值: `false`
 - 参考选项: `false`, `true`
-- 分类: `SURVIVAL`, `JFT`, `FEATURE`
+- 分类: `CREATIVE`, `JFT`, `FEATURE`
 
 
 ## 试炼刷怪笼识别SL假人按倍数计入战斗人数(假人以一当十) (trialSpawnerRecognitionSLPlayerAsMul)
@@ -382,4 +382,4 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 - 类型: `int`
 - 默认值: `1`
 - 参考选项: `1`, `5`, `10`
-- 分类: `SURVIVAL`, `JFT`
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`
