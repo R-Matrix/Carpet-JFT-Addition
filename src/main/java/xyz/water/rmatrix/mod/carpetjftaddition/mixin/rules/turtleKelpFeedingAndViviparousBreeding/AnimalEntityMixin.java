@@ -6,7 +6,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+//#if MC < 12110
 import net.minecraft.item.ItemStack;
+//#endif
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -22,9 +24,6 @@ public abstract class AnimalEntityMixin extends PassiveEntity {
     }
 
     @Shadow
-    protected abstract void eat(PlayerEntity player, Hand hand, ItemStack stack);
-
-    @Shadow
     public abstract void lovePlayer(@Nullable PlayerEntity player);
 
     //#if MC >= 12102
@@ -34,6 +33,11 @@ public abstract class AnimalEntityMixin extends PassiveEntity {
 
     @Shadow
     public abstract boolean canEat();
+
+    //#if MC < 12110
+    @Shadow
+    protected abstract void eat(PlayerEntity player, Hand hand, ItemStack stack);
+    //#endif
 
     @WrapMethod(method = "interactMob")
     protected ActionResult jft$interactMobHook(PlayerEntity player, Hand hand, Operation<ActionResult> original){

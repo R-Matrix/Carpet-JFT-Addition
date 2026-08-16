@@ -50,9 +50,9 @@ public abstract class PersistentProjectileEntityApplyCollisionMixin extends Proj
 
         if(!CarpetJFTSettings.tridentMultipleDamage) return original;
 
-        Vec3d vec3d = this.getPos();
+        Vec3d vec3d = this.jft$getPos(this);
         ArrayList<EntityHitResult> arrayList = new ArrayList<>(this.jft$collectPiercingCollisions(vec3d, blockHitResult.getPos()));
-        arrayList.sort(Comparator.comparingDouble((entityHitResultx) -> vec3d.squaredDistanceTo(entityHitResultx.getEntity().getPos())));
+        arrayList.sort(Comparator.comparingDouble((entityHitResultx) -> vec3d.squaredDistanceTo(this.jft$getPos(entityHitResultx.getEntity()))));
         arrayListLocalRef.set(arrayList);
         return arrayList.isEmpty() ? null : arrayList.getFirst();
     }
@@ -164,6 +164,23 @@ public abstract class PersistentProjectileEntityApplyCollisionMixin extends Proj
 
     @Unique
     private Collection<EntityHitResult> jft$collectPiercingCollisions(Vec3d vec3d, Vec3d vec3d2) {
+        //#if MC >= 12110
+        //$$ return PiercingCollisionHelper.collect(this.getEntityWorld(), this, vec3d, vec3d2, this.getBoundingBox().stretch(this.getVelocity()).expand(1.0F), this::canHit);
+        //#else
+        //#if MC >= 12108
+        //$$ return PiercingCollisionHelper.collect(this.getWorld(), this, vec3d, vec3d2, this.getBoundingBox().stretch(this.getVelocity()).expand(1.0F), this::canHit);
+        //#else
         return PiercingCollisionHelper.collect(this.getEntityWorld(), this, vec3d, vec3d2, this.getBoundingBox().stretch(this.getVelocity()).expand(1.0F), this::canHit);
+        //#endif
+        //#endif
+    }
+
+    @Unique
+    private Vec3d jft$getPos(Entity entity) {
+        //#if MC >= 12110
+        //$$ return new Vec3d(entity.getX(), entity.getY(), entity.getZ());
+        //#else
+        return entity.getPos();
+        //#endif
     }
 }

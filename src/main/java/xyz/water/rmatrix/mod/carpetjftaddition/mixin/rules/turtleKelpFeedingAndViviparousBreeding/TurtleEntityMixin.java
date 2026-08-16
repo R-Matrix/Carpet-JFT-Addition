@@ -23,6 +23,18 @@ public abstract class TurtleEntityMixin extends AnimalEntityMixin implements Con
         super(entityType, world);
     }
 
+    //#if MC >= 12110
+    //$$ @Unique
+    //$$ private boolean jft$isClient() {
+    //$$     return this.getEntityWorld().isClient();
+    //$$ }
+    //#else
+    @Unique
+    private boolean jft$isClient() {
+        return this.getWorld().isClient;
+    }
+    //#endif
+
     @Unique
     public boolean jft$isBreedingKelpItem(ItemStack stack) {
         return CarpetJFTSettings.turtleKelpFeedingAndViviparousBreeding && stack.isOf(Items.KELP);
@@ -38,7 +50,7 @@ public abstract class TurtleEntityMixin extends AnimalEntityMixin implements Con
         ItemStack itemStack = player.getStackInHand(hand);
         if(jft$isBreedingKelpItem(itemStack)){
             int i = this.getBreedingAge();
-            if (!this.getWorld().isClient && i == 0 && this.canEat()) {
+            if (!this.jft$isClient() && i == 0 && this.canEat()) {
                 this.eat(player, hand, itemStack);
                 this.lovePlayer(player);
                 //#if MC >= 12102

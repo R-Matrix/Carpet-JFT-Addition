@@ -5,7 +5,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.VariantHolder;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.MemoryModuleType;
 import net.minecraft.entity.ai.brain.sensor.Sensor;
@@ -29,6 +28,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+//#if MC >= 12105
+//$$ import org.spongepowered.asm.mixin.gen.Invoker;
+//$$ import xyz.water.rmatrix.mod.carpetjftaddition.tools.frogDyeFeedingAndViviparousBreeding.FrogEntityVariantAccess;
+//#endif
 import xyz.water.rmatrix.mod.carpetjftaddition.CarpetJFTSettings;
 import xyz.water.rmatrix.mod.carpetjftaddition.mixin.rules.turtleKelpFeedingAndViviparousBreeding.AnimalEntityMixin;
 import xyz.water.rmatrix.mod.carpetjftaddition.tools.frogDyeFeedingAndViviparousBreeding.AddViviparousSpawnActivities;
@@ -39,11 +42,27 @@ import xyz.water.rmatrix.mod.carpetjftaddition.tools.turtleKelpFeedingAndVivipar
 
 @Mixin(FrogEntity.class)
 public abstract class FrogEntityMixin extends AnimalEntityMixin
-        implements VariantHolder<RegistryEntry<FrogVariant>>, ControlBeViviparousAccess, FrogEntityDyeFlagAccess {
+        implements ControlBeViviparousAccess, FrogEntityDyeFlagAccess
+        //#if MC >= 12105
+        //$$ , FrogEntityVariantAccess
+        //#endif
+{
 
     protected FrogEntityMixin(EntityType<? extends PassiveEntity> entityType, World world) {
         super(entityType, world);
     }
+
+    //#if MC >= 12110
+    //$$ @Unique
+    //$$ private boolean jft$isClient() {
+    //$$     return this.getEntityWorld().isClient();
+    //$$ }
+    //#else
+    @Unique
+    private boolean jft$isClient() {
+        return this.getWorld().isClient;
+    }
+    //#endif
 
 
     @Final
@@ -84,7 +103,7 @@ public abstract class FrogEntityMixin extends AnimalEntityMixin
         ItemStack itemStack = player.getStackInHand(hand);
         if(jft$isBreedingDyeItem(itemStack)){
             int i = this.getBreedingAge();
-            if (!this.getWorld().isClient && i == 0 && this.canEat()) {
+            if (!this.jft$isClient() && i == 0 && this.canEat()) {
                 this.eat(player, hand, itemStack);
                 this.lovePlayer(player);
                 //#if MC >= 12102
@@ -156,4 +175,10 @@ public abstract class FrogEntityMixin extends AnimalEntityMixin
     public void setJft$shouldBeViviparous(boolean value) {
         this.jft$shouldBeViviparous = value;
     }
+
+    //#if MC >= 12105
+    //$$ @Override
+    //$$ @Invoker("setVariant")
+    //$$ public abstract void jft$setVariant(RegistryEntry<FrogVariant> variant);
+    //#endif
 }

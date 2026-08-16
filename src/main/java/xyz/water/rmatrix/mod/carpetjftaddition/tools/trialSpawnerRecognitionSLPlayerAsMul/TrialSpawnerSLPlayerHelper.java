@@ -23,6 +23,10 @@ public final class TrialSpawnerSLPlayerHelper {
             return false;
         }
         ServerPlayerEntity player = world.getServer().getPlayerManager().getPlayer(uuid);
+        //#if MC >= 12110
+        //$$ return player != null && player.getGameProfile().name().startsWith(NAME_PREFIX);
+        //#else
         return player != null && player.getGameProfile().getName().startsWith(NAME_PREFIX);
+        //#endif
     }
 }

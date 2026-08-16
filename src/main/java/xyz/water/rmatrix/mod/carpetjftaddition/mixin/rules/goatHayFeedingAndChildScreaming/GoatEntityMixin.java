@@ -27,6 +27,18 @@ public abstract class GoatEntityMixin extends AnimalEntityMixin implements GoatH
         super(entityType, world);
     }
 
+    //#if MC >= 12110
+    //$$ @Unique
+    //$$ private boolean jft$isClient() {
+    //$$     return this.getEntityWorld().isClient();
+    //$$ }
+    //#else
+    @Unique
+    private boolean jft$isClient() {
+        return this.getWorld().isClient;
+    }
+    //#endif
+
 
     @Unique
     private boolean jft$isBreedingHayBlock(ItemStack itemStack){
@@ -50,7 +62,7 @@ public abstract class GoatEntityMixin extends AnimalEntityMixin implements GoatH
         ItemStack itemStack = player.getStackInHand(hand);
         if(jft$isBreedingHayBlock(itemStack)){
             int i = this.getBreedingAge();
-            if (!this.getWorld().isClient && i == 0 && this.canEat()) {
+            if (!this.jft$isClient() && i == 0 && this.canEat()) {
                 this.eat(player, hand, itemStack);
                 this.lovePlayer(player);
                 //#if MC >= 12102

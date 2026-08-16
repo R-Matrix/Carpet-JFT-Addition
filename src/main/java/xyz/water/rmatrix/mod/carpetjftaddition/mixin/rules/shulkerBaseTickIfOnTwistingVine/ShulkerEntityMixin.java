@@ -6,6 +6,7 @@ import net.minecraft.entity.mob.ShulkerEntity;
 import net.minecraft.entity.passive.GolemEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,11 +20,23 @@ public abstract class ShulkerEntityMixin extends GolemEntity {
         super(entityType, world);
     }
 
+    //#if MC >= 12110
+    //$$ @Unique
+    //$$ private World jft$getWorld() {
+    //$$     return this.getEntityWorld();
+    //$$ }
+    //#else
+    @Unique
+    private World jft$getWorld() {
+        return this.getWorld();
+    }
+    //#endif
+
     @Inject(method="tick", at=@At("HEAD"), cancellable = true)
     private void cancelAllActivityIfOnTwistingVine(CallbackInfo ci){
         if(CarpetJFTSettings.shulkerBaseTickIfOnTwistingVine){
-            boolean bl = this.getWorld().getBlockState(this.getBlockPos()).isOf(Blocks.TWISTING_VINES) ||
-                    this.getWorld().getBlockState(this.getBlockPos()).isOf(Blocks.TWISTING_VINES_PLANT);
+            boolean bl = this.jft$getWorld().getBlockState(this.getBlockPos()).isOf(Blocks.TWISTING_VINES) ||
+                    this.jft$getWorld().getBlockState(this.getBlockPos()).isOf(Blocks.TWISTING_VINES_PLANT);
             if(bl){
                 this.baseTick();
                 ci.cancel();

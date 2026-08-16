@@ -8,7 +8,12 @@ import net.minecraft.entity.ai.brain.task.Task;
 import net.minecraft.entity.ai.brain.task.TaskTriggerer;
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.entity.passive.FrogVariant;
+//#if MC >= 12105
+//$$ import net.minecraft.entity.passive.FrogVariants;
+//$$ import net.minecraft.registry.RegistryKeys;
+//#else
 import net.minecraft.registry.Registries;
+//#endif
 import net.minecraft.registry.entry.RegistryEntry;
 
 public class FrogSpanChildTask {
@@ -32,7 +37,16 @@ public class FrogSpanChildTask {
                                         //$$ FrogEntity frogBaby = EntityType.FROG.create(world);
                                         //#endif
                                         if(frogBaby != null) {
-                                            //#if MC >= 12102
+                                        //#if MC >= 12102
+                                        //#if MC >= 12105
+                                        //$$ RegistryEntry<FrogVariant> variant = switch (flagValue) {
+                                        //$$     case 1 -> world.getRegistryManager().getOrThrow(RegistryKeys.FROG_VARIANT).getOrThrow(FrogVariants.COLD);
+                                        //$$     case 2 -> world.getRegistryManager().getOrThrow(RegistryKeys.FROG_VARIANT).getOrThrow(FrogVariants.WARM);
+                                        //$$     default -> world.getRegistryManager().getOrThrow(RegistryKeys.FROG_VARIANT).getOrThrow(FrogVariants.TEMPERATE);
+                                        //$$ };
+                                        //$$
+                                        //$$ ((FrogEntityVariantAccess) frogBaby).jft$setVariant(variant);
+                                        //#else
                                             RegistryEntry<FrogVariant> variant = switch (flagValue) {
                                                 case 1 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.COLD);
                                                 case 2 -> Registries.FROG_VARIANT.getOrThrow(FrogVariant.WARM);
@@ -40,7 +54,8 @@ public class FrogSpanChildTask {
                                             };
 
                                             frogBaby.setVariant(variant);
-                                            //#else
+                                        //#endif
+                                        //#else
                                             //$$ RegistryEntry<FrogVariant> variant = switch (flagValue) {
                                             //$$     case 1 -> Registries.FROG_VARIANT.getEntry(FrogVariant.COLD).orElseThrow();
                                             //$$     case 2 -> Registries.FROG_VARIANT.getEntry(FrogVariant.WARM).orElseThrow();
