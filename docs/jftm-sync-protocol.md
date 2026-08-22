@@ -1,22 +1,32 @@
-# JFTM-同步协议（服务端协议）
+# JFTM 地图同步
 
-本协议首版针对 Minecraft 1.21.4，服务端只发送地图元数据，不发送颜色数组或完整地图文件。
+## 功能
 
-## 开关与配置
+JFTM 是一个服务端地图元数据同步功能，负责：
 
-Carpet 规则：
+- 扫描并读取服务器保存的地图；
+- 缓存地图编号、维度、中心坐标、缩放等级和锁定状态；
+- 提供地图元数据同步；
+- 在新地图产生后提供增量数据。
 
-```text
-jftMapSyncProtocol
-```
+地图分类信息包括：
 
-配置文件：
+- 是否存在探索类标记；
+- 旗帜标记及其位置、颜色和名称。
+
+首次同步会获取完整地图列表，后续同步只获取新增地图。客户端可以在打开地图或需要刷新时发起同步请求。
+
+Carpet 规则 `jftMapSyncProtocol` 用于控制功能总开关，默认关闭。管理员可以使用 [`/jft-sync`](command.md) 命令查看和修改同步配置。
+
+## 配置文件
+
+配置文件路径：
 
 ```text
 config/carpet-jft-addition/carpetjftaddition-jftm.json
 ```
 
-默认配置：
+首次启用服务端并启动世界时，如果配置文件不存在，模组会自动创建默认配置：
 
 ```json
 {
@@ -27,107 +37,35 @@ config/carpet-jft-addition/carpetjftaddition-jftm.json
 }
 ```
 
-只有管理员（权限等级 2）可以使用：
+### `allowAllPlayers`
 
-```text
-/jft-sync status
-/jft-sync reload
-/jft-sync get <key>
-/jft-sync set <key> <value>
-```
+是否允许所有玩家请求地图同步。
 
-## Payload ID
+- `true`：所有玩家都可以请求同步；
+- `false`：只允许权限等级 2 及以上的玩家请求同步；
+- 默认值：`true`。
 
-源码中的内部字段和方法使用 `jft$` 前缀；Minecraft `Identifier` 不允许 `$`，因此网络路径使用 `jftm_` 前缀。
+### `maxMapsPerSync`
 
-```text
-carpetjftaddition:jftm_sync_request
-carpetjftaddition:jftm_sync_start
-carpetjftaddition:jftm_sync_batch
-carpetjftaddition:jftm_sync_end
-```
+单个同步批次发送的最大地图数量。地图较多时会拆分为多个批次。
 
-## 客户端请求
+- 范围：`1`–`256`；
+- 默认值：`128`。
 
-`MapSyncRequestC2S`：
+### `allowAllDimensions`
 
-```text
-protocolVersion : VarInt
-worldSessionId  : UUID（两个 Long）
-knownMaxMapId   : VarInt
-forceFullSync   : Boolean
-```
+是否允许同步当前玩家所在维度之外的地图。
 
-首次连接没有 session 时，客户端发送全零 UUID 和 `knownMaxMapId = -1` 即可。
+- `true`：允许同步所有维度的地图；
+- `false`：只同步玩家当前维度的地图；
+- 默认值：`true`。
 
-## 服务端响应
+### `requestCooldownTicks`
 
-`MapSyncStartS2C`：
+同一玩家两次同步请求之间的最小间隔，单位为游戏刻（tick）。
 
-```text
-syncMode       : VarInt
-worldSessionId : UUID（两个 Long）
-highestMapId   : VarInt
-entryCount     : VarInt
-```
+- 范围：`0`–`72000`；
+- 默认值：`40`，约 2 秒；
+- `0`：不设置请求冷却时间。
 
-`syncMode` 枚举顺序：
-
-```text
-0 FULL
-1 DELTA
-2 NO_CHANGE
-3 DENIED
-```
-
-`MapSyncBatchS2C` 每批最多发送 `maxMapsPerSync` 条地图，协议硬上限为 256 条。
-
-`MapSyncEndS2C`：
-
-```text
-worldSessionId : UUID（两个 Long）
-highestMapId   : VarInt
-```
-
-客户端收到结束包之前不得替换当前缓存。
-
-## ServerMapInfo
-
-```text
-mapId         : VarInt
-dimension     : Identifier
-centerX       : Int
-centerZ       : Int
-scale         : Byte
-locked        : Boolean
-classification
-```
-
-`MapClassification` 只有两个字段：
-
-```text
-hasExplorationMarker : Boolean
-banners              : List<BannerMarker>
-```
-
-`BannerMarker`：
-
-```text
-worldX : Int
-worldZ : Int
-color  : DyeColor 协议值
-name   : Optional<Text>
-```
-
-`hasExplorationMarker` 只表示当前 `MapState` 是否存在探索类装饰物，不表示地图的真实创建来源。
-
-## 同步行为
-
-- session 不一致、强制刷新或首次请求：发送 `FULL`；
-- session 一致且不是强制刷新：只发送 `mapId > knownMaxMapId` 的地图；
-- 没有新地图：发送 `NO_CHANGE` 和结束包；
-- Carpet 规则关闭、权限不足、协议版本不支持或请求过频：发送 `DENIED`；
-- `allowAllDimensions=false` 时只发送玩家当前维度的地图；
-- 服务端不主动推送新地图，客户端在打开地图时发起请求；
-- 客户端可以按 `dimension + centerX + centerZ + scale` 分组显示。
-
+配置文件中的数值超出允许范围时，会恢复为对应的默认值。
