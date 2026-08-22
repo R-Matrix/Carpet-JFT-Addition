@@ -36,6 +36,7 @@
 ## 文档
 
 - [规则](docs/rules.md)
+- [致谢与来源说明](docs/acknowledgments.md)
 
 
 - [TODO](todo.md)

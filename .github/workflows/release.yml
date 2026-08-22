@@ -1,4 +1,5 @@
 # 发布: 按版本矩阵并行构建, 汇总所有 jar 创建 Release
+# 工作流结构参考并改写自 Carpet-Igny-Addition，详见 docs/acknowledgments.md
 name: release
 on:
   push:

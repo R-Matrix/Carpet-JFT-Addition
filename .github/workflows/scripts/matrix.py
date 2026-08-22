@@ -2,6 +2,9 @@
 """扫描 settings.json 中的版本列表, 生成 GitHub Actions include 矩阵.
 
 可通过环境变量 TARGET_SUBPROJECT (逗号分隔) 过滤要构建的版本子项目.
+
+本脚本的版本矩阵处理思路参考并改写自 Carpet-Igny-Addition，来源说明见
+docs/acknowledgments.md。
 """
 import json
 import os
