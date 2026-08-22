@@ -121,3 +121,6 @@ carpetjftaddition:
         extra:
           '0': Setting to 10 makes 1 bot player equivalent to 10 players for total/simultaneous mob counts, and ejects 10 reward items instead of 1.
           '1': Set to 1 for vanilla behavior.
+      jftMapSyncProtocol:
+        name: JFTM map synchronization protocol
+        desc: Enables the JFTM map metadata synchronization protocol.

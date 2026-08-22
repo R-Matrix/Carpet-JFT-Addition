@@ -157,3 +157,6 @@ carpetjftaddition:
         extra:
           '0': 设为 10 时, 1 个假人等效 10 个玩家, 总怪物数/同屏怪物数按 10 人计算, 结束阶段一次弹出 10 份奖励
           '1': 设为 1 即原版行为
+      jftMapSyncProtocol:
+        name: JFTM 地图同步协议
+        desc: 控制是否启用 JFTM 地图元数据同步协议
