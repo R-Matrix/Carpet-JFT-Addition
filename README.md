@@ -38,8 +38,11 @@
 - [规则](docs/rules.md)
 - [致谢与来源说明](docs/acknowledgments.md)
 
+- [命令](docs/command.md)
 
-- [TODO](todo.md)
+- [TODO](docs/todo.md)
+
+- [JFTM 地图同步协议说明](docs/jftm-sync-protocol.md)
 
 ## 下载
 

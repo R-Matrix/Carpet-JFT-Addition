@@ -183,4 +183,8 @@ public class CarpetJFTSettings {
             validators = {Validators.NonNegativeNumber.class, jft_intValidator.class},
             categories = {SURVIVAL, "JFT", FEATURE})
     public static int trialSpawnerRecognitionSLPlayerAsMul = 1;
+
+
+    @Rule(categories = {SURVIVAL, "JFT", FEATURE})
+    public static boolean jftMapSyncProtocol = false;
 }
