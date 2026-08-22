@@ -36,7 +36,6 @@
 ## 文档
 
 - [规则](docs/rules.md)
-- [致谢与来源说明](docs/acknowledgments.md)
 
 - [命令](docs/command.md)
 
@@ -47,3 +46,7 @@
 ## 下载
 
 - [GitHub](https://github.com/R-Matrix/Carpet-JFT-Addition/releases/latest)
+
+## 致谢
+
+- [致谢与来源说明](docs/acknowledgments.md)
