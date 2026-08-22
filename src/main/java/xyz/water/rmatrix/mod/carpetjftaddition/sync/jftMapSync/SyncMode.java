@@ -1,4 +1,3 @@
-//#if MC >= 12104
 package xyz.water.rmatrix.mod.carpetjftaddition.sync.jftMapSync;
 
 public enum SyncMode {
@@ -7,4 +6,3 @@ public enum SyncMode {
     NO_CHANGE,
     DENIED
 }
-//#endif

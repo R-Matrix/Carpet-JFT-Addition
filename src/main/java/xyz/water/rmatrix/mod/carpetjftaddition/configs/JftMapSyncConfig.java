@@ -1,4 +1,3 @@
-//#if MC >= 12104
 package xyz.water.rmatrix.mod.carpetjftaddition.configs;
 
 import com.google.gson.Gson;
@@ -128,4 +127,3 @@ public final class JftMapSyncConfig {
         return jft$PATH;
     }
 }
-//#endif

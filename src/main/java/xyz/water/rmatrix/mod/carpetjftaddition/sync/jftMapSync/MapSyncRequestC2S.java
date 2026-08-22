@@ -1,4 +1,3 @@
-//#if MC >= 12104
 package xyz.water.rmatrix.mod.carpetjftaddition.sync.jftMapSync;
 
 import net.minecraft.network.RegistryByteBuf;
@@ -35,4 +34,3 @@ public record MapSyncRequestC2S(
         return ID;
     }
 }
-//#endif

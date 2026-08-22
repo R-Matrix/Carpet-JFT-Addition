@@ -1,4 +1,3 @@
-//#if MC >= 12104
 package xyz.water.rmatrix.mod.carpetjftaddition.mixin.sync.jftMapSync;
 
 import net.minecraft.component.type.MapIdComponent;
@@ -20,4 +19,3 @@ public abstract class ServerWorldMapStateMixin {
         }
     }
 }
-//#endif

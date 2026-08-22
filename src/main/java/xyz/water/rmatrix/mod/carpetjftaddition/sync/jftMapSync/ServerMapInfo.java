@@ -1,4 +1,3 @@
-//#if MC >= 12104
 package xyz.water.rmatrix.mod.carpetjftaddition.sync.jftMapSync;
 
 import net.minecraft.util.Identifier;
@@ -18,4 +17,3 @@ public record ServerMapInfo(
                 : classification;
     }
 }
-//#endif

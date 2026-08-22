@@ -1,4 +1,3 @@
-//#if MC >= 12104
 package xyz.water.rmatrix.mod.carpetjftaddition.sync.jftMapSync;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -103,8 +102,7 @@ public final class JftMapSyncService {
                     .sorted(Comparator.comparingInt(MapFile::mapId))
                     .forEach(mapFile -> {
                         try {
-                            MapState mapState = overworld.getPersistentStateManager().get(
-                                    MapState.getPersistentStateType(), "map_" + mapFile.mapId());
+                            MapState mapState = jft$getMapState(overworld, mapFile.mapId());
                             if (mapState != null) {
                                 ServerMapInfo mapInfo = jft$fromMapState(mapFile.mapId(), mapState);
                                 jft$maps.put(mapInfo.mapId(), mapInfo);
@@ -117,6 +115,16 @@ public final class JftMapSyncService {
         } catch (IOException exception) {
             CarpetJFTAddition.LOGGER.warn("无法扫描地图目录 {}", dataDirectory, exception);
         }
+    }
+
+    private static MapState jft$getMapState(ServerWorld world, int mapId) {
+        //#if MC >= 12105
+        //$$ return world.getPersistentStateManager().get(
+        //$$         MapState.createStateType(new MapIdComponent(mapId)));
+        //#else
+        return world.getPersistentStateManager().get(
+                MapState.getPersistentStateType(), "map_" + mapId);
+        //#endif
     }
 
     private static int jft$parseMapId(Path path) {
@@ -254,4 +262,3 @@ public final class JftMapSyncService {
     private JftMapSyncService() {
     }
 }
-//#endif

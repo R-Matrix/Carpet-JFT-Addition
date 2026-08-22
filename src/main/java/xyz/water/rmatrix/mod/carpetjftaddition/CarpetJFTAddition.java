@@ -47,9 +47,7 @@ public class CarpetJFTAddition implements ModInitializer, CarpetExtension {
 
 		CarpetServer.manageExtension(this);
 
-		//#if MC >= 12104
 		JftMapSyncService.jft$init();
-		//#endif
 
 	}
 

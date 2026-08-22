@@ -1,4 +1,3 @@
-//#if MC >= 12104
 package xyz.water.rmatrix.mod.carpetjftaddition.command;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -117,4 +116,3 @@ public final class JftMapSyncCommands {
     private JftMapSyncCommands() {
     }
 }
-//#endif
