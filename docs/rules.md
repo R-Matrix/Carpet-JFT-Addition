@@ -4,6 +4,17 @@
 
 ---
 
+## 启用 JFTM 地图同步协议 (jftMapSyncProtocol)
+
+控制 Carpet JFT Addition 是否允许 MapCatalog 地图同步协议。
+
+当使用包含内嵌 MapCatalog 的 Carpet JFT Addition 发行版时，关闭此规则会让内嵌的 MapCatalog 拒绝客户端地图同步请求。该规则不会删除地图文件或清空服务端缓存。单独安装 MapCatalog 时不会读取此规则，协议仅受 MapCatalog 配置文件中的 `mapSyncEnabled` 控制，配置文件中也不会出现 `jftMapSyncProtocol` 字段。
+
+- 类型: `boolean`
+- 默认值: `false`
+- 参考选项: `false`, `true`
+- 分类: `SURVIVAL`, `JFT`, `FEATURE`
+
 ## 控制引雷附魔天气要求 (channelingWeather)
 
 控制三叉戟引雷附魔的天气要求
@@ -379,14 +390,7 @@ JAVI玩家再也不用羡慕BE玩家的三叉戟搅拌机了!(滑稽)
 
 对普通试炼刷怪笼和不详试炼刷怪笼同时生效, 设为 1 即为原版行为
 
-
-## JFTM-同步协议 (jftMapSyncProtocol)
-
-控制服务端是否提供地图元数据同步协议.
-
-详细配置信息可见 [JFTM-同步协议](jftm-sync-protocol.md)
-
-- 类型: `boolean`
-- 默认值: `false`
-- 参考选项: `false`, `true`
+- 类型: `int`
+- 默认值: `1`
+- 参考选项: `1`, `5`, `10`
 - 分类: `SURVIVAL`, `JFT`, `FEATURE`
