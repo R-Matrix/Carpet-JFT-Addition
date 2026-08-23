@@ -48,6 +48,13 @@ jobs:
         with:
           gradle-version: '9.3.0'
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/dev' }}
+      - name: restore MapCatalog embedding cache
+        if: ${{ inputs.module == 'mapcatalog' && inputs.release == false }}
+        id: mapcatalog_cache
+        uses: actions/cache@v4
+        with:
+          path: build/mapcatalog-embedding
+          key: mapcatalog-embedding-v1-${{ runner.os }}-${{ hashFiles('mapcatalog/**', 'build.gradle', 'settings.gradle', 'common.gradle', 'gradle.properties', 'settings.json', 'versions/mainProject', 'versions/mapping-*') }}
       - name: download MapCatalog embedding artifacts
         if: ${{ inputs.module == 'carpet' && inputs.embed_mapcatalog }}
         uses: actions/download-artifact@v4
@@ -55,6 +62,7 @@ jobs:
           name: mapcatalog-embedding
           path: build/mapcatalog-embedding
       - name: build with gradle
+        if: ${{ inputs.module != 'mapcatalog' || inputs.release || steps.mapcatalog_cache.outputs.cache-hit != 'true' }}
         run: |
           set -euo pipefail
 
@@ -108,7 +116,7 @@ jobs:
           BUILD_ID: ${{ github.run_number }}
           BUILD_RELEASE: ${{ inputs.release }}
       - name: prepare MapCatalog embedding artifacts
-        if: ${{ inputs.module == 'mapcatalog' }}
+        if: ${{ inputs.module == 'mapcatalog' && (inputs.release || steps.mapcatalog_cache.outputs.cache-hit != 'true') }}
         shell: bash
         run: |
           set -euo pipefail
@@ -133,6 +141,25 @@ jobs:
             fi
             mkdir -p "build/mapcatalog-embedding/$v"
             cp "$jar_path" "build/mapcatalog-embedding/$v/mapcatalog-server.jar"
+          done
+      - name: validate MapCatalog embedding artifacts
+        if: ${{ inputs.module == 'mapcatalog' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -n "${{ inputs.target_subproject }}" ]; then
+            versions=$(echo "${{ inputs.target_subproject }}" | tr ',' ' ')
+          else
+            versions=$(jq -r '.versions[]' settings.json)
+          fi
+
+          for v in $versions; do
+            artifact="build/mapcatalog-embedding/$v/mapcatalog-server.jar"
+            if [ ! -f "$artifact" ]; then
+              echo "Missing MapCatalog embedding artifact: $artifact" >&2
+              exit 1
+            fi
           done
       - name: upload MapCatalog embedding artifacts
         if: ${{ inputs.module == 'mapcatalog' }}
