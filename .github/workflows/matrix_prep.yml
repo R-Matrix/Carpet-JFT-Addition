@@ -1,4 +1,4 @@
-# 生成版本构建矩阵: 扫描 settings.json 的版本列表, 可按 TARGET_SUBPROJECT 过滤
+# 生成模组与版本构建矩阵: 扫描 settings.json 的版本列表, 可按 TARGET_SUBPROJECT 过滤
 # 工作流结构参考并改写自 Carpet-Igny-Addition，详见 docs/acknowledgments.md
 name: _step.matrix_prepare
 on:

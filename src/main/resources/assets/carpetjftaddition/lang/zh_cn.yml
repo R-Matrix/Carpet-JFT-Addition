@@ -1,6 +1,12 @@
 carpetjftaddition:
   carpet_translations:
     rule:
+      jftMapSyncProtocol:
+        name: 启用 JFTM 地图同步协议
+        desc: 控制 Carpet JFT Addition 是否允许 MapCatalog 地图同步协议
+        extra:
+          '0': 关闭后，服务端会拒绝 MapCatalog 的同步请求
+          '1': 仅在同时安装 Carpet JFT Addition 和 MapCatalog 时生效
       channelingWeather:
         name: 控制引雷附魔天气要求
         desc: 控制三叉戟引雷附魔的天气要求
@@ -157,6 +163,3 @@ carpetjftaddition:
         extra:
           '0': 设为 10 时, 1 个假人等效 10 个玩家, 总怪物数/同屏怪物数按 10 人计算, 结束阶段一次弹出 10 份奖励
           '1': 设为 1 即原版行为
-      jftMapSyncProtocol:
-        name: JFTM 地图同步协议
-        desc: 控制是否启用 JFTM 地图元数据同步协议

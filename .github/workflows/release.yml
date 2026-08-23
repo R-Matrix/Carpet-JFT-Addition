@@ -1,4 +1,4 @@
-# 发布: 按版本矩阵并行构建, 汇总所有 jar 创建 Release
+# 发布: 先独立构建 MapCatalog, 再构建嵌入 MapCatalog 的 Carpet JAR
 # 工作流结构参考并改写自 Carpet-Igny-Addition，详见 docs/acknowledgments.md
 name: release
 on:
@@ -13,7 +13,7 @@ jobs:
   matrix_prep:
     uses: ./.github/workflows/matrix_prep.yml
 
-  build:
+  mapcatalog:
     needs: matrix_prep
     runs-on: ubuntu-24.04
     strategy:
@@ -32,24 +32,87 @@ jobs:
         with:
           gradle-version: '9.3.0'
           cache-read-only: true
-      - name: build ${{ matrix.subproject }}
-        run: gradle :${{ matrix.subproject }}:build
+      - name: build MapCatalog ${{ matrix.subproject }}
+        run: gradle :mapcatalog-${{ matrix.subproject }}:build -PbuildMapCatalog=true -PembedMapCatalog=false
         env:
           BUILD_ID: ${{ github.run_number }}
           BUILD_RELEASE: 'true'
-      - name: upload ${{ matrix.subproject }} jar
+      - name: prepare MapCatalog embedding artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          version='${{ matrix.subproject }}'
+          jar_path=$(find "mapcatalog/versions/$version/build/libs" -maxdepth 1 -type f \
+            -name 'mapcatalog-server-*.jar' \
+            ! -name '*-sources.jar' \
+            ! -name '*-dev.jar' \
+            ! -name '*-shadow.jar' \
+            | sort -V | tail -n 1)
+          if [ -z "$jar_path" ]; then
+            echo "No MapCatalog runtime JAR found for $version" >&2
+            exit 1
+          fi
+          mkdir -p "build/mapcatalog-embedding/$version"
+          cp "$jar_path" "build/mapcatalog-embedding/$version/mapcatalog-server.jar"
+      - name: upload MapCatalog embedding artifact
         uses: actions/upload-artifact@v4
         with:
-          name: jar-${{ matrix.subproject }}
-          path: versions/${{ matrix.subproject }}/build/libs/*.jar
-
-  publish:
-    needs: build
+          name: mapcatalog-embedding-${{ matrix.subproject }}
+          path: build/mapcatalog-embedding/
+          if-no-files-found: error
+  carpet:
+    needs: [matrix_prep, mapcatalog]
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix_prep.outputs.matrix) }}
     steps:
-      - name: download all jars
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: setup jdk
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
+      - name: setup gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.0'
+          cache-read-only: true
+      - name: download MapCatalog embedding artifact
         uses: actions/download-artifact@v4
         with:
+          name: mapcatalog-embedding-${{ matrix.subproject }}
+          path: build/mapcatalog-embedding
+      - name: build Carpet-JFT-Addition ${{ matrix.subproject }}
+        run: >-
+          gradle :${{ matrix.subproject }}:build
+          -PbuildMapCatalog=false
+          -PembedMapCatalog=true
+          -PmapCatalogArtifactsDir=build/mapcatalog-embedding
+        env:
+          BUILD_ID: ${{ github.run_number }}
+          BUILD_RELEASE: 'true'
+      - name: upload Carpet release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-carpet-${{ matrix.subproject }}
+          path: |
+            versions/${{ matrix.subproject }}/build/libs/*.jar
+            !versions/${{ matrix.subproject }}/build/libs/*-sources.jar
+            !versions/${{ matrix.subproject }}/build/libs/*-dev.jar
+            !versions/${{ matrix.subproject }}/build/libs/*-shadow.jar
+          if-no-files-found: error
+
+  publish:
+    needs: [mapcatalog, carpet]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: download release jars
+        uses: actions/download-artifact@v4
+        with:
+          pattern: jar-carpet-*
           path: release-jars
           merge-multiple: true
       - name: create release

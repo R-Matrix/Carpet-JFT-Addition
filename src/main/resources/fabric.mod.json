@@ -21,6 +21,9 @@
 		],
 		"fabric-datagen": [
 			"xyz.water.rmatrix.mod.carpetjftaddition.CarpetJFTAdditionDataGenerator"
+		],
+		"mapcatalog-carpet-jft": [
+			"xyz.water.rmatrix.mod.carpetjftaddition.integration.MapCatalogCarpetRuleEntrypoint"
 		]
 	},
 	"mixins": [

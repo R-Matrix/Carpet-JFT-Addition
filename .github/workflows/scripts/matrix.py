@@ -26,7 +26,7 @@ def main():
             sys.exit(1)
         versions = [v for v in versions if v in targets]
 
-    matrix = {'include': [{'subproject': v} for v in versions]}
+    matrix = {'include': [{'subproject': version} for version in versions]}
     with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
         f.write('matrix={}\n'.format(json.dumps(matrix)))
 

@@ -7,7 +7,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.water.rmatrix.mod.carpetjftaddition.sync.jftMapSync.JftMapSyncService;
 import xyz.water.rmatrix.mod.carpetjftaddition.tools.frogDyeFeedingAndViviparousBreeding.FrogMemoryModuleType;
 import xyz.water.rmatrix.mod.carpetjftaddition.tools.frogDyeFeedingAndViviparousBreeding.FrogViviparousActivity;
 import xyz.water.rmatrix.mod.carpetjftaddition.translations.JFTTranslationConstants;
@@ -46,8 +45,6 @@ public class CarpetJFTAddition implements ModInitializer, CarpetExtension {
 		JFTTranslations.loadTranslations();
 
 		CarpetServer.manageExtension(this);
-
-		JftMapSyncService.jft$init();
 
 	}
 

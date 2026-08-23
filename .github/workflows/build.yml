@@ -14,6 +14,16 @@ on:
         type: string
         required: false
         default: ''
+      module:
+        description: 要构建的模块: carpet 或 mapcatalog
+        type: string
+        required: false
+        default: carpet
+      embed_mapcatalog:
+        description: 是否将对应版本的 MapCatalog 嵌入 Carpet JAR
+        type: boolean
+        required: false
+        default: false
       mixin_audit:
         description: 是否运行 mixin 审计 (需 common.gradle 配置 runServerMixinAudit)
         type: boolean
@@ -38,21 +48,102 @@ jobs:
         with:
           gradle-version: '9.3.0'
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' && github.ref != 'refs/heads/dev' }}
+      - name: download MapCatalog embedding artifacts
+        if: ${{ inputs.module == 'carpet' && inputs.embed_mapcatalog }}
+        uses: actions/download-artifact@v4
+        with:
+          name: mapcatalog-embedding
+          path: build/mapcatalog-embedding
       - name: build with gradle
         run: |
-          if [ -z "${{ inputs.target_subproject }}" ]; then
-            echo "Building all subprojects"
-            gradle build
-          else
-            args=$(echo "${{ inputs.target_subproject }}" | tr ',' '\n' | sed 's/$/:build/' | paste -sd ' ')
-            echo "Building with arguments=$args"
-            gradle $args
-          fi
+          set -euo pipefail
+
+          module='${{ inputs.module }}'
+          target_subproject='${{ inputs.target_subproject }}'
+
+          case "$module" in
+            carpet)
+              if [[ '${{ inputs.embed_mapcatalog }}' == 'true' ]]; then
+                mapcatalog_args=(
+                  '-PbuildMapCatalog=false'
+                  '-PembedMapCatalog=true'
+                  '-PmapCatalogArtifactsDir=build/mapcatalog-embedding'
+                )
+              else
+                mapcatalog_args=('-PbuildMapCatalog=false')
+              fi
+              if [[ -z "$target_subproject" ]]; then
+                echo 'Building Carpet-JFT-Addition versions'
+                gradle build "${mapcatalog_args[@]}"
+              else
+                IFS=',' read -r -a target_versions <<< "$target_subproject"
+                gradle_args=()
+                for version in "${target_versions[@]}"; do
+                  gradle_args+=(":${version}:build")
+                done
+                echo "Building Carpet-JFT-Addition with arguments=${gradle_args[*]} ${mapcatalog_args[*]}"
+                gradle "${gradle_args[@]}" "${mapcatalog_args[@]}"
+              fi
+              ;;
+            mapcatalog)
+              if [[ -z "$target_subproject" ]]; then
+                mapfile -t target_versions < <(jq -r '.versions[]' settings.json)
+              else
+                IFS=',' read -r -a target_versions <<< "$target_subproject"
+              fi
+
+              gradle_args=()
+              for version in "${target_versions[@]}"; do
+                gradle_args+=(":mapcatalog-${version}:build")
+              done
+              echo "Building MapCatalog with arguments=${gradle_args[*]}"
+              gradle "${gradle_args[@]}" -PbuildMapCatalog=true -PembedMapCatalog=false
+              ;;
+            *)
+              echo "Unknown module: $module" >&2
+              exit 1
+              ;;
+          esac
         env:
           BUILD_ID: ${{ github.run_number }}
           BUILD_RELEASE: ${{ inputs.release }}
+      - name: prepare MapCatalog embedding artifacts
+        if: ${{ inputs.module == 'mapcatalog' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -n "${{ inputs.target_subproject }}" ]; then
+            versions=$(echo "${{ inputs.target_subproject }}" | tr ',' ' ')
+          else
+            versions=$(jq -r '.versions[]' settings.json)
+          fi
+
+          mkdir -p build/mapcatalog-embedding
+          for v in $versions; do
+            jar_path=$(find "mapcatalog/versions/$v/build/libs" -maxdepth 1 -type f \
+              -name 'mapcatalog-server-*.jar' \
+              ! -name '*-sources.jar' \
+              ! -name '*-dev.jar' \
+              ! -name '*-shadow.jar' \
+              | sort -V | tail -n 1)
+            if [ -z "$jar_path" ]; then
+              echo "No MapCatalog runtime JAR found for $v" >&2
+              exit 1
+            fi
+            mkdir -p "build/mapcatalog-embedding/$v"
+            cp "$jar_path" "build/mapcatalog-embedding/$v/mapcatalog-server.jar"
+          done
+      - name: upload MapCatalog embedding artifacts
+        if: ${{ inputs.module == 'mapcatalog' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mapcatalog-embedding
+          path: build/mapcatalog-embedding/
+          if-no-files-found: error
       - name: detect enchantment-related changes
         id: detect_enchantment
+        if: ${{ inputs.module == 'carpet' }}
         shell: bash
         env:
           CI_EVENT_NAME: ${{ github.event_name }}
@@ -94,7 +185,7 @@ jobs:
             echo 'No Enchantment-related changes detected; skip GameTest.'
           fi
       - name: run GameTest
-        if: ${{ steps.detect_enchantment.outputs.run == 'true' }}
+        if: ${{ inputs.module == 'carpet' && steps.detect_enchantment.outputs.run == 'true' }}
         timeout-minutes: 30
         run: |
           if [ -n "${{ inputs.target_subproject }}" ]; then
@@ -110,17 +201,40 @@ jobs:
             gradle ":$v:runGameTest"
           done
       - name: run mixin audit
-        if: ${{ inputs.mixin_audit }}
+        if: ${{ inputs.module == 'carpet' && inputs.mixin_audit }}
         timeout-minutes: 30
         run: |
-          for v in $(jq -r '.versions[]' settings.json); do
+          if [ -n "${{ inputs.target_subproject }}" ]; then
+            versions=$(echo "${{ inputs.target_subproject }}" | tr ',' ' ')
+          else
+            versions=$(jq -r '.versions[]' settings.json)
+          fi
+
+          for v in $versions; do
             mkdir -p "versions/$v/run"
             echo eula=true > "versions/$v/run/eula.txt"
             echo ">>> mixin audit for $v"
             gradle ":$v:runServerMixinAudit"
           done
-      - name: upload artifacts
+      - name: upload Carpet-JFT-Addition artifacts
+        if: ${{ inputs.module == 'carpet' }}
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: versions/*/build/libs/
+          name: build-artifacts-carpet
+          path: |
+            versions/*/build/libs/*.jar
+            !**/*-sources.jar
+            !**/*-dev.jar
+            !**/*-shadow.jar
+          if-no-files-found: error
+      - name: upload MapCatalog artifacts
+        if: ${{ inputs.module == 'mapcatalog' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-mapcatalog
+          path: |
+            mapcatalog/versions/*/build/libs/*.jar
+            !**/*-sources.jar
+            !**/*-dev.jar
+            !**/*-shadow.jar
+          if-no-files-found: error

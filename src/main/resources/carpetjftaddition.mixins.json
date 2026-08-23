@@ -41,8 +41,7 @@
     "rules.turtleKelpFeedingAndViviparousBreeding.TemptGoalMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.TurtleEntityMixin",
     "rules.turtleKelpFeedingAndViviparousBreeding.TurtleMateGoalMixin",
-    "rules.wetSpongeDriesOnDesertAndBedLands.WetSpongeBlockMixin",
-    "sync.jftMapSync.ServerWorldMapStateMixin"
+    "rules.wetSpongeDriesOnDesertAndBedLands.WetSpongeBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1
