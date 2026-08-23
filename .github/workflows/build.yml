@@ -15,7 +15,7 @@ on:
         required: false
         default: ''
       module:
-        description: 要构建的模块: carpet 或 mapcatalog
+        description: '要构建的模块: carpet 或 mapcatalog'
         type: string
         required: false
         default: carpet

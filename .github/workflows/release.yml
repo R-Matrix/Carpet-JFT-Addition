@@ -1,10 +1,11 @@
-# 发布: 先独立构建 MapCatalog, 再构建嵌入 MapCatalog 的 Carpet JAR
+# 发布: 先构建 MapCatalog, 再构建嵌入 MapCatalog 的 Carpet JAR；带 -mapcatalog 后缀时同时发布独立 MapCatalog JAR
 # 工作流结构参考并改写自 Carpet-Igny-Addition，详见 docs/acknowledgments.md
 name: release
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -60,6 +61,17 @@ jobs:
         with:
           name: mapcatalog-embedding-${{ matrix.subproject }}
           path: build/mapcatalog-embedding/
+          if-no-files-found: error
+      - name: upload MapCatalog release artifact
+        if: ${{ endsWith(github.ref_name, '-mapcatalog') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: jar-mapcatalog-${{ matrix.subproject }}
+          path: |
+            mapcatalog/versions/${{ matrix.subproject }}/build/libs/*.jar
+            !mapcatalog/versions/${{ matrix.subproject }}/build/libs/*-sources.jar
+            !mapcatalog/versions/${{ matrix.subproject }}/build/libs/*-dev.jar
+            !mapcatalog/versions/${{ matrix.subproject }}/build/libs/*-shadow.jar
           if-no-files-found: error
   carpet:
     needs: [matrix_prep, mapcatalog]
@@ -117,6 +129,13 @@ jobs:
           pattern: jar-carpet-*
           path: release-jars
           merge-multiple: true
+      - name: download MapCatalog release jars
+        if: ${{ endsWith(github.ref_name, '-mapcatalog') }}
+        uses: actions/download-artifact@v4
+        with:
+          pattern: jar-mapcatalog-*
+          path: release-jars
+          merge-multiple: true
       - name: prepare release notes
         shell: bash
         run: |
@@ -149,6 +168,6 @@ jobs:
           files: release-jars/*.jar
           body_path: release-notes.md
           generate_release_notes: false
-          name: Carpet JFT Addition ${{ github.ref_name }}
+          name: ${{ endsWith(github.ref_name, '-mapcatalog') && format('Carpet JFT Addition and MapCatalog {0}', github.ref_name) || format('Carpet JFT Addition {0}', github.ref_name) }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
