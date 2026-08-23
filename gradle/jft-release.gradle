@@ -61,16 +61,28 @@ tasks.register('jftRelease') {
 		}
 
 		def runGit = { List<String> arguments, boolean allowFailure = false ->
+			def command = new java.util.ArrayList<String>(arguments.size() + 1)
+			command.add('git')
+			arguments.each { argument ->
+				command.add(argument.toString())
+			}
+			def process = new ProcessBuilder(command)
+				.directory(rootProject.projectDir)
+				.redirectErrorStream(false)
+				.start()
 			def stdout = new ByteArrayOutputStream()
 			def stderr = new ByteArrayOutputStream()
-			def result = project.exec {
-				commandLine(['git'] + arguments)
-				standardOutput = stdout
-				errorOutput = stderr
-				ignoreExitValue = true
+			Thread stdoutReader = Thread.start {
+				process.inputStream.transferTo(stdout)
 			}
+			Thread stderrReader = Thread.start {
+				process.errorStream.transferTo(stderr)
+			}
+			int exitCode = process.waitFor()
+			stdoutReader.join()
+			stderrReader.join()
 			def output = [
-				exitCode: result.exitValue,
+				exitCode: exitCode,
 				stdout: stdout.toString(StandardCharsets.UTF_8.name()).trim(),
 				stderr: stderr.toString(StandardCharsets.UTF_8.name()).trim()
 			]
