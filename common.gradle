@@ -1,5 +1,12 @@
 final int mcVersion = project.mcVersion
 
+def buildMapCatalog = providers.gradleProperty('buildMapCatalog')
+		.map { Boolean.parseBoolean(it) }
+		.orElse(true)
+def embedMapCatalog = providers.gradleProperty('embedMapCatalog')
+		.map { Boolean.parseBoolean(it) }
+		.orElse(buildMapCatalog)
+
 apply plugin: 'maven-publish'
 apply plugin: 'net.fabricmc.fabric-loom-remap'
 apply plugin: 'com.replaymod.preprocess'
@@ -128,6 +135,42 @@ jar {
 
 	from("LICENSE") {
 		rename { "${it}_${inputs.properties.archivesName}" }
+	}
+}
+
+// The server-only MapCatalog remains an independent Fabric mod, but the
+// Carpet artifact may carry the matching version as a nested JAR. When the
+// MapCatalog subproject is excluded (for example in the Carpet CI job), the
+// prebuilt JAR is read from mapCatalogArtifactsDir instead.
+if (!project.name.startsWith('mapcatalog-') && embedMapCatalog.get()) {
+	def mapCatalogProject = rootProject.findProject(":mapcatalog-${project.name}")
+	if (mapCatalogProject != null) {
+		evaluationDependsOn(mapCatalogProject.path)
+		def mapCatalogRemapJar = mapCatalogProject.tasks.named('remapJar')
+		tasks.named('remapJar') {
+			dependsOn(mapCatalogRemapJar)
+			nestedJars.from(mapCatalogRemapJar.flatMap { it.archiveFile })
+			addNestedDependencies = true
+		}
+	} else {
+		File artifactsDirectory = providers.gradleProperty('mapCatalogArtifactsDir')
+				.map { rootProject.file(it) }
+				.orElse(rootProject.file('build/mapcatalog-embedding'))
+				.get()
+		File mapCatalogJar = new File(artifactsDirectory, "${project.minecraft_version}/mapcatalog-server.jar")
+		tasks.named('remapJar') {
+			nestedJars.from(mapCatalogJar)
+			addNestedDependencies = true
+			inputs.file(mapCatalogJar)
+			doFirst {
+				if (!mapCatalogJar.isFile()) {
+					throw new GradleException(
+							"MapCatalog embedding was requested for ${project.name}, but no prebuilt JAR was found at ${mapCatalogJar}. "
+									+ "Build MapCatalog first or disable -PembedMapCatalog."
+					)
+				}
+			}
+		}
 	}
 }
 

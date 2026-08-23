@@ -26,10 +26,22 @@ pluginManagement {
 }
 
 def settings = new JsonSlurper().parseText(file('settings.json').text)
+def buildMapCatalogProperty = gradle.startParameter.projectProperties['buildMapCatalog']
+def buildMapCatalog = buildMapCatalogProperty == null || buildMapCatalogProperty.toString().toBoolean()
+
 for (String version : settings.versions) {
 	include(":$version")
 
 	def proj = project(":$version")
 	proj.projectDir = file("versions/$version")
 	proj.buildFileName = "../../common.gradle"
+
+	// MapCatalog is kept in the same Gradle project while its source tree and
+	// published artifact remain independent from Carpet JFT Addition.
+	if (buildMapCatalog) {
+		include(":mapcatalog-$version")
+		def mapCatalogProj = project(":mapcatalog-$version")
+		mapCatalogProj.projectDir = file("mapcatalog/versions/$version")
+		mapCatalogProj.buildFileName = "../../common.gradle"
+	}
 }

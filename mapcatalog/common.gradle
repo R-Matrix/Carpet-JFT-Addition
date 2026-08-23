@@ -1,0 +1,100 @@
+final int mcVersion = project.mcVersion
+final String mapCatalogVersion = project.providers.gradleProperty('mapcatalog_version').getOrElse('1.0.0')
+
+apply plugin: 'maven-publish'
+apply plugin: 'net.fabricmc.fabric-loom-remap'
+apply plugin: 'com.replaymod.preprocess'
+
+String modVersionSuffix = ''
+if (System.getenv('BUILD_RELEASE') != 'true') {
+	String buildNumber = System.getenv('BUILD_ID')
+	modVersionSuffix += buildNumber != null ? ('+build.' + buildNumber) : '-SNAPSHOT'
+}
+String fullModVersion = mapCatalogVersion + modVersionSuffix
+
+version = mapCatalogVersion + '-mc' + project.minecraft_version + modVersionSuffix
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+sourceSets {
+	configureEach { sourceSet ->
+		// The preprocessor assumes that the module source is under the root
+		// project's src directory. Replace that source root for MapCatalog while
+		// preserving the generated preprocessed directory for non-main versions.
+		File rootJavaDir = rootProject.file("src/${sourceSet.name}/java")
+		File mapCatalogJavaDir = rootProject.file("mapcatalog/src/${sourceSet.name}/java")
+		sourceSet.java.setSrcDirs(sourceSet.java.srcDirs.collect { dir ->
+			dir == rootJavaDir ? mapCatalogJavaDir : dir
+		})
+
+		File rootResourcesDir = rootProject.file("src/${sourceSet.name}/resources")
+		File mapCatalogResourcesDir = rootProject.file("mapcatalog/src/${sourceSet.name}/resources")
+		sourceSet.resources.setSrcDirs(sourceSet.resources.srcDirs.collect { dir ->
+			dir == rootResourcesDir ? mapCatalogResourcesDir : dir
+		})
+	}
+}
+
+repositories {
+	maven {
+		url = 'https://maven.aliyun.com/nexus/content/groups/public'
+	}
+	maven {
+		url = 'https://repository.hanbings.io/proxy'
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+processResources {
+	inputs.property 'version', fullModVersion
+	inputs.property 'minecraft_dependency', project.minecraft_dependency
+
+	filesMatching('fabric.mod.json') {
+		expand 'version': fullModVersion, 'minecraft_dependency': project.minecraft_dependency
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+	options.release = 21
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+	withSourcesJar()
+}
+
+// Gradle 9 validates task output dependencies strictly. The preprocessor
+// replaces the source-set roots with generated directories, so sourcesJar
+// must wait for both preprocessing tasks explicitly.
+tasks.named('sourcesJar') {
+	dependsOn tasks.matching { task ->
+		task.name in ['preprocessCode', 'preprocessResources']
+	}
+}
+
+jar {
+	from(rootProject.file('LICENSE')) {
+		rename { "${it}_${project.archives_base_name}" }
+	}
+}
+
+publishing {
+	publications {
+		create('mavenJava', MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+		}
+	}
+}

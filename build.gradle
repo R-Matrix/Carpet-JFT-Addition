@@ -6,45 +6,83 @@ plugins {
 	id 'com.replaymod.preprocess' version 'c5abb4fb12'
 }
 
+def buildMapCatalog = providers.gradleProperty('buildMapCatalog')
+	.map { value -> Boolean.parseBoolean(value) }
+	.orElse(true)
+
 preprocess {
 	strictExtraMappings = false
 
-	def mc1211 = createNode('1.21.1', 1_21_01, '')
-	def mc1213 = createNode('1.21.3', 1_21_03, '')
-	def mc1214 = createNode('1.21.4', 1_21_04, '')
-	def mc1215 = createNode('1.21.5', 1_21_05, '')
-	def mc1218 = createNode('1.21.8', 1_21_08, '')
-	def mc12110 = createNode('1.21.10', 1_21_10, '')
+	def versionData = [
+		['1.21.1', 1_21_01],
+		['1.21.3', 1_21_03],
+		['1.21.4', 1_21_04],
+		['1.21.5', 1_21_05],
+		['1.21.8', 1_21_08],
+		['1.21.10', 1_21_10]
+	]
+	def makeChain = { String prefix ->
+		versionData.collect { data ->
+			String name = prefix.isEmpty() ? data[0] : "${prefix}-${data[0]}"
+			createNode(name, data[1], '')
+		}
+	}
+	def mainNodes = makeChain('')
+	def linkChain = { List nodes ->
+		nodes.collate(2, 1, false).each { pair ->
+			pair[0].link(pair[1], file("versions/mapping-${pair[0].project.replace('mapcatalog-', '')}-${pair[1].project.replace('mapcatalog-', '')}.txt"))
+		}
+	}
+	linkChain(mainNodes)
 
-	mc1211.link(mc1213, file('versions/mapping-1.21.1-1.21.3.txt'))
-	mc1213.link(mc1214, file('versions/mapping-1.21.3-1.21.4.txt'))
-	mc1214.link(mc1215, file('versions/mapping-1.21.4-1.21.5.txt'))
-	mc1215.link(mc1218, file('versions/mapping-1.21.5-1.21.8.txt'))
-	mc1218.link(mc12110, file('versions/mapping-1.21.8-1.21.10.txt'))
+	if (buildMapCatalog.get()) {
+		def mapCatalogNodes = makeChain('mapcatalog')
+		linkChain(mapCatalogNodes)
+
+		// The preprocessor owns one graph for the whole Gradle build. Connect the
+		// two module chains at the shared main version so both modules can resolve
+		// their own `versions/mainProject` file without creating a second graph.
+		mainNodes.find { it.project == '1.21.4' }.link(
+			mapCatalogNodes.find { it.project == 'mapcatalog-1.21.4' },
+			null
+		)
+	}
 
 	for (final def node in getNodes()) {
 		findProject(node.project).ext.mcVersion = node.mcVersion
 	}
 }
 
+def buildProjects = {
+	subprojects.findAll { project ->
+		buildMapCatalog.get() || !project.name.startsWith('mapcatalog-')
+	}
+}
+
 tasks.register('buildAndGather') {
-	subprojects {
-		dependsOn project.tasks.named('build').get()
+	buildProjects().each { project ->
+		dependsOn project.tasks.named('build')
 	}
 	doFirst {
 		println 'Gathering builds'
-		def buildLibs = { p -> p.buildDir.toPath().resolve('libs') }
-		delete fileTree(buildLibs(rootProject)) {
+		if (!buildMapCatalog.get()) {
+			println 'Skipping MapCatalog builds (use -PbuildMapCatalog=true to include them)'
+		}
+		def rootBuildLibs = rootProject.layout.buildDirectory.dir('libs').get().asFile
+		delete fileTree(rootBuildLibs) {
 			include '*'
 		}
-		subprojects {
-			copy {
-				from(buildLibs(project)) {
-					include '*.jar'
-					exclude '*-dev.jar', '*-sources.jar', '*-shadow.jar'
+	}
+	doLast {
+		def rootBuildLibs = rootProject.layout.buildDirectory.dir('libs').get().asFile
+		buildProjects().each { project ->
+			def remapJar = project.tasks.findByName('remapJar')
+			if (remapJar != null) {
+				copy {
+					from(remapJar.archiveFile)
+					into rootBuildLibs
+					duplicatesStrategy = DuplicatesStrategy.INCLUDE
 				}
-				into buildLibs(rootProject)
-				duplicatesStrategy = DuplicatesStrategy.INCLUDE
 			}
 		}
 	}
@@ -60,3 +98,5 @@ if (!tasks.findByName('build')) {
 		dependsOn 'buildAndGather'
 	}
 }
+
+apply from: rootProject.file('gradle/jft-release.gradle')
