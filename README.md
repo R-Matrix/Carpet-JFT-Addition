@@ -47,7 +47,10 @@
 
 ## 下载
 
-- [GitHub](https://github.com/R-Matrix/Carpet-JFT-Addition/releases/latest)
+- Carpet JFT Addition
+  - [GitHub](https://github.com/R-Matrix/Carpet-JFT-Addition/releases/latest)
+- MapCatalog
+  - [Github](https://github.com/R-Matrix/Carpet-JFT-Addition/releases/tag/v0.0.15-mapcatalog)
 
 ## 致谢
 
