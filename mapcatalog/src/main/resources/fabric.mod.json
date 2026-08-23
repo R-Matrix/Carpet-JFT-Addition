@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "mapcatalog",
+  "version": "${version}",
+  "name": "MapCatalog Server",
+  "description": "Server-side map metadata catalog and synchronization protocol.",
+  "authors": [
+    "R-Matrix"
+  ],
+  "contact": {
+    "sources": "https://github.com/R-Matrix/Carpet-JFT-Addition"
+  },
+  "license": "MIT",
+  "icon": "assets/mapcatalog/mapcatalog-icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "xyz.water.rmatrix.mapcatalog.MapCatalogServer"
+    ]
+  },
+  "mixins": [
+    "mapcatalog.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "minecraft": "${minecraft_dependency}",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
