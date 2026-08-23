@@ -1,0 +1,202 @@
+import java.nio.charset.StandardCharsets
+import java.util.regex.Pattern
+
+def versionPattern = Pattern.compile('^[0-9]+\\.[0-9]+\\.[0-9]+$')
+
+def readProperty = { String content, String key ->
+	def pattern = Pattern.compile('^\\s*' + Pattern.quote(key) + '\\s*=\\s*(.*?)\\s*$')
+	for (String line : content.split(/\r?\n/)) {
+		def matcher = pattern.matcher(line)
+		if (matcher.matches()) {
+			return matcher.group(1)
+		}
+	}
+	return null
+}
+
+def replaceProperty = { String content, String key, String value ->
+	String newline = content.contains('\r\n') ? '\r\n' : '\n'
+	List<String> lines = content.split(/\r?\n/, -1).toList()
+	def pattern = Pattern.compile('^\\s*' + Pattern.quote(key) + '\\s*=.*$')
+	boolean replaced = false
+
+	for (int index = 0; index < lines.size(); index++) {
+		if (pattern.matcher(lines[index]).matches()) {
+			lines[index] = "${key}=${value}"
+			replaced = true
+			break
+		}
+	}
+
+	if (!replaced) {
+		if (!lines.isEmpty() && !lines[-1].isEmpty()) {
+			lines.add('')
+		}
+		lines.add("${key}=${value}")
+	}
+
+	return lines.join(newline)
+}
+
+def nextPatchVersion = { String version ->
+	def parts = version.split('\\.')
+	return "${parts[0]}.${parts[1]}.${Integer.parseInt(parts[2]) + 1}"
+}
+
+tasks.register('jftRelease') {
+	group = 'release'
+	description = 'Interactively update release versions and create a release commit and tag'
+
+	doLast {
+		File propertiesFile = rootProject.file('gradle.properties')
+		String originalProperties = propertiesFile.getText(StandardCharsets.UTF_8.name())
+		String currentCarpetVersion = readProperty(originalProperties, 'mod_version')
+		String currentMapCatalogVersion = readProperty(originalProperties, 'mapcatalog_version')
+
+		if (currentCarpetVersion == null || !versionPattern.matcher(currentCarpetVersion).matches()) {
+			throw new GradleException("gradle.properties 中的 mod_version 无效: ${currentCarpetVersion}")
+		}
+		if (currentMapCatalogVersion == null || !versionPattern.matcher(currentMapCatalogVersion).matches()) {
+			throw new GradleException("gradle.properties 中的 mapcatalog_version 无效: ${currentMapCatalogVersion}")
+		}
+
+		def runGit = { List<String> arguments, boolean allowFailure = false ->
+			def stdout = new ByteArrayOutputStream()
+			def stderr = new ByteArrayOutputStream()
+			def result = project.exec {
+				commandLine(['git'] + arguments)
+				standardOutput = stdout
+				errorOutput = stderr
+				ignoreExitValue = true
+			}
+			def output = [
+				exitCode: result.exitValue,
+				stdout: stdout.toString(StandardCharsets.UTF_8.name()).trim(),
+				stderr: stderr.toString(StandardCharsets.UTF_8.name()).trim()
+			]
+			if (output.exitCode != 0 && !allowFailure) {
+				String detail = output.stderr ?: output.stdout
+				throw new GradleException("git ${arguments.join(' ')} 执行失败: ${detail}")
+			}
+			return output
+		}
+
+		if (runGit(['status', '--porcelain']).stdout) {
+			throw new GradleException('工作区不是干净的。请先提交或处理现有修改，再运行 jftRelease。')
+		}
+		String branch = runGit(['branch', '--show-current']).stdout
+		if (!branch) {
+			throw new GradleException('当前处于 detached HEAD，不能创建发布提交。请先切换到一个分支。')
+		}
+
+		def reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))
+		def readInput = { String prompt ->
+			print(prompt)
+			System.out.flush()
+			String value = reader.readLine()
+			if (value == null) {
+				throw new GradleException('未读取到输入，发布操作已取消。')
+			}
+			return value.trim()
+		}
+		def askYesNo = { String prompt, boolean defaultYes ->
+			while (true) {
+				String answer = readInput("${prompt} [${defaultYes ? 'Y/n' : 'y/N'}] ")
+				if (answer.isEmpty()) {
+					return defaultYes
+				}
+				if (answer.equalsIgnoreCase('y') || answer.equalsIgnoreCase('yes')) {
+					return true
+				}
+				if (answer.equalsIgnoreCase('n') || answer.equalsIgnoreCase('no')) {
+					return false
+				}
+				println('请输入 y 或 n。')
+			}
+		}
+		def askVersion = { String product, String currentVersion ->
+			String suggestedVersion = nextPatchVersion(currentVersion)
+			while (true) {
+				String answer = readInput("新的 ${product} 版本号 [${suggestedVersion}] ")
+				String selected = answer.isEmpty() ? suggestedVersion : answer
+				if (versionPattern.matcher(selected).matches()) {
+					return selected
+				}
+				println('版本号必须是类似 1.2.3 的格式。')
+			}
+		}
+
+		println('')
+		println('JFT Release Assistant')
+		println('1) 只发布 Carpet JFT Addition')
+		println('2) 发布 Carpet JFT Addition 和 MapCatalog')
+		String releaseChoice = readInput('选择发布类型 [1] ')
+		if (releaseChoice.isEmpty()) {
+			releaseChoice = '1'
+		}
+		if (releaseChoice != '1' && releaseChoice != '2') {
+			throw new GradleException('发布类型必须是 1 或 2。')
+		}
+		boolean includeMapCatalog = releaseChoice == '2'
+
+		boolean updateCarpetVersion = askYesNo("更新 Carpet 版本号（当前 ${currentCarpetVersion}）?", true)
+		String carpetVersion = updateCarpetVersion
+			? askVersion('Carpet JFT Addition', currentCarpetVersion)
+			: currentCarpetVersion
+
+		boolean updateMapCatalogVersion = includeMapCatalog && askYesNo(
+			"更新 MapCatalog 版本号（当前 ${currentMapCatalogVersion}）?",
+			false
+		)
+		String mapCatalogVersion = updateMapCatalogVersion
+			? askVersion('MapCatalog', currentMapCatalogVersion)
+			: currentMapCatalogVersion
+
+		String tagName = "v${carpetVersion}${includeMapCatalog ? '-mapcatalog' : ''}"
+		if (runGit(['rev-parse', '--verify', "refs/tags/${tagName}"], true).exitCode == 0) {
+			throw new GradleException("标签 ${tagName} 已存在，请使用新的版本号。")
+		}
+		if (!runGit(['diff', '--check']).stdout.isEmpty()) {
+			throw new GradleException('当前工作区存在空白字符错误，已取消发布。')
+		}
+		if (!updateCarpetVersion && !updateMapCatalogVersion) {
+			throw new GradleException('至少需要更新一个版本号，不能创建没有版本变更的发布提交。')
+		}
+
+		String updatedProperties = replaceProperty(originalProperties, 'mod_version', carpetVersion)
+		updatedProperties = replaceProperty(updatedProperties, 'mapcatalog_version', mapCatalogVersion)
+		propertiesFile.setText(updatedProperties, StandardCharsets.UTF_8.name())
+
+		try {
+			println('')
+			println("即将创建标签: ${tagName}")
+			println("Carpet JFT Addition: ${currentCarpetVersion} -> ${carpetVersion}")
+			if (includeMapCatalog) {
+				println("MapCatalog: ${currentMapCatalogVersion} -> ${mapCatalogVersion}")
+			}
+			println('版本文件变更:')
+			println(runGit(['diff', '--', 'gradle.properties']).stdout)
+
+			if (!askYesNo('确认创建 release commit 和 tag?', false)) {
+				propertiesFile.setText(originalProperties, StandardCharsets.UTF_8.name())
+				println('发布操作已取消，版本文件已恢复。')
+				return
+			}
+
+			runGit(['diff', '--check'])
+			runGit(['add', '--', 'gradle.properties'])
+			String commitMessage = includeMapCatalog
+				? "chore(release): release Carpet ${carpetVersion} with MapCatalog ${mapCatalogVersion}"
+				: "chore(release): release Carpet ${carpetVersion}"
+			runGit(['commit', '-m', commitMessage])
+			runGit(['tag', '-a', tagName, '-m', "Release ${tagName}"])
+
+			println('')
+			println("已创建 release commit 和标签 ${tagName}。尚未推送到远端。")
+			println("推送命令: git push origin ${branch} --follow-tags")
+		} catch (Exception exception) {
+			println("发布操作在创建提交或标签时失败: ${exception.message}")
+			throw exception
+		}
+	}
+}
