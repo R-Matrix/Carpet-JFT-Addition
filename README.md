@@ -43,6 +43,8 @@
 
 - [MapCatalog 服务端同步协议说明](docs/mapcatalog-server.md)
 
+- [Change Log](CHANGELOG.md)
+
 > Carpet JFT Addition 的发行 JAR 会内嵌对应版本的 MapCatalog。安装 Carpet JFT Addition 时不要再额外安装独立版 MapCatalog；如果只需要地图同步协议，则单独安装 MapCatalog，不要安装 Carpet JFT Addition。
 
 ## 下载
