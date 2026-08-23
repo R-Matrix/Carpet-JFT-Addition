@@ -43,13 +43,80 @@ def nextPatchVersion = { String version ->
 	return "${parts[0]}.${parts[1]}.${Integer.parseInt(parts[2]) + 1}"
 }
 
+def makeChangelogEntry = { String version, String date ->
+	"""## [${version}] - ${date}
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+"""
+}
+
+def insertChangelogEntry = { String original, String version, String date ->
+	String newline = original.contains('\r\n') ? '\r\n' : '\n'
+	String normalized = original.replace('\r\n', '\n')
+	String releaseHeader = "## [${version}]"
+	if (normalized.readLines().any { line ->
+		line == releaseHeader || line.startsWith("${releaseHeader} -")
+	}) {
+		throw new GradleException("CHANGELOG.md 已经存在版本 ${version}，请检查后再发布。")
+	}
+
+	String entry = makeChangelogEntry(version, date)
+	int firstReleaseStart = normalized.indexOf('\n## [')
+	String updated
+	if (firstReleaseStart < 0) {
+		updated = normalized.replaceFirst(/\s+$/, '') + "\n\n" + entry
+	} else {
+		int insertionPoint = firstReleaseStart + 1
+		updated = normalized.substring(0, insertionPoint) + entry + "\n" + normalized.substring(insertionPoint)
+	}
+	return updated.replace('\n', newline)
+}
+
+def normalizeChangelogEnding = { String content ->
+	String newline = content.contains('\r\n') ? '\r\n' : '\n'
+	String normalized = content.replace('\r\n', '\n').replaceFirst(/\s+$/, '')
+	return normalized.replace('\n', newline) + newline
+}
+
+def changelogEntryHasContent = { String content, String version ->
+	String normalized = content.replace('\r\n', '\n')
+	String header = "## [${version}]"
+	int start = normalized.readLines().findIndexOf { line ->
+		line == header || line.startsWith("${header} -")
+	}
+	if (start < 0) {
+		return false
+	}
+	List<String> lines = normalized.readLines()
+	for (int index = start + 1; index < lines.size(); index++) {
+		if (lines[index].startsWith('## [')) {
+			break
+		}
+		if (lines[index].trim().startsWith('- ') && lines[index].trim().length() > 2) {
+			return true
+		}
+	}
+	return false
+}
+
 tasks.register('jftRelease') {
 	group = 'release'
 	description = 'Interactively update release versions and create a release commit and tag'
 
 	doLast {
 		File propertiesFile = rootProject.file('gradle.properties')
+		File changelogFile = rootProject.file('CHANGELOG.md')
 		String originalProperties = propertiesFile.getText(StandardCharsets.UTF_8.name())
+		boolean changelogExisted = changelogFile.exists()
+		String originalChangelog = changelogExisted
+			? changelogFile.getText(StandardCharsets.UTF_8.name())
+			: ''
 		String currentCarpetVersion = readProperty(originalProperties, 'mod_version')
 		String currentMapCatalogVersion = readProperty(originalProperties, 'mapcatalog_version')
 
@@ -137,6 +204,32 @@ tasks.register('jftRelease') {
 				println('版本号必须是类似 1.2.3 的格式。')
 			}
 		}
+		def restoreReleaseFiles = {
+			propertiesFile.setText(originalProperties, StandardCharsets.UTF_8.name())
+			if (changelogExisted) {
+				changelogFile.setText(originalChangelog, StandardCharsets.UTF_8.name())
+			} else if (changelogFile.exists()) {
+				if (!changelogFile.delete()) {
+					println('警告：无法删除新生成的 CHANGELOG.md，请手动恢复。')
+				}
+			}
+		}
+		def openNotepad = { File file ->
+			if (!System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+				throw new GradleException('当前发布助手已配置为使用记事本，仅支持 Windows。')
+			}
+			def command = new java.util.ArrayList<String>()
+			command.add('notepad.exe')
+			command.add(file.absolutePath)
+			def editor = new ProcessBuilder(command)
+				.directory(rootProject.projectDir)
+				.inheritIO()
+				.start()
+			int exitCode = editor.waitFor()
+			if (exitCode != 0) {
+				throw new GradleException("记事本退出异常，退出码: ${exitCode}")
+			}
+		}
 
 		println('')
 		println('JFT Release Assistant')
@@ -177,36 +270,70 @@ tasks.register('jftRelease') {
 
 		String updatedProperties = replaceProperty(originalProperties, 'mod_version', carpetVersion)
 		updatedProperties = replaceProperty(updatedProperties, 'mapcatalog_version', mapCatalogVersion)
+		String updatedChangelog = insertChangelogEntry(
+			originalChangelog,
+			carpetVersion,
+			java.time.LocalDate.now().toString()
+		)
 		propertiesFile.setText(updatedProperties, StandardCharsets.UTF_8.name())
+		changelogFile.setText(updatedChangelog, StandardCharsets.UTF_8.name())
+		boolean releaseCommitCreated = false
 
 		try {
+			println('')
+			println('已生成 CHANGELOG.md 发布模板，请在记事本中补全本次变更内容。')
+			while (true) {
+				openNotepad(changelogFile)
+				String editedChangelog = changelogFile.getText(StandardCharsets.UTF_8.name())
+				String normalizedChangelog = normalizeChangelogEnding(editedChangelog)
+				if (normalizedChangelog != editedChangelog) {
+					changelogFile.setText(normalizedChangelog, StandardCharsets.UTF_8.name())
+					editedChangelog = normalizedChangelog
+				}
+				if (changelogEntryHasContent(editedChangelog, carpetVersion)) {
+					break
+				}
+				println('CHANGELOG.md 至少需要填写一条以 "- " 开头的变更内容。')
+				if (!askYesNo('是否重新打开记事本继续编辑?', true)) {
+					restoreReleaseFiles()
+					println('发布操作已取消，版本文件和 CHANGELOG.md 已恢复。')
+					return
+				}
+			}
+
 			println('')
 			println("即将创建标签: ${tagName}")
 			println("Carpet JFT Addition: ${currentCarpetVersion} -> ${carpetVersion}")
 			if (includeMapCatalog) {
 				println("MapCatalog: ${currentMapCatalogVersion} -> ${mapCatalogVersion}")
 			}
-			println('版本文件变更:')
-			println(runGit(['diff', '--', 'gradle.properties']).stdout)
+			println('即将提交的变更:')
+			runGit(['diff', '--check'])
+			runGit(['add', '--', 'gradle.properties', 'CHANGELOG.md'])
+			println(runGit(['diff', '--cached', '--', 'gradle.properties', 'CHANGELOG.md']).stdout)
 
 			if (!askYesNo('确认创建 release commit 和 tag?', false)) {
-				propertiesFile.setText(originalProperties, StandardCharsets.UTF_8.name())
-				println('发布操作已取消，版本文件已恢复。')
+				runGit(['restore', '--staged', '--', 'gradle.properties', 'CHANGELOG.md'], true)
+				restoreReleaseFiles()
+				println('发布操作已取消，版本文件和 CHANGELOG.md 已恢复。')
 				return
 			}
 
-			runGit(['diff', '--check'])
-			runGit(['add', '--', 'gradle.properties'])
 			String commitMessage = includeMapCatalog
 				? "chore(release): release Carpet ${carpetVersion} with MapCatalog ${mapCatalogVersion}"
 				: "chore(release): release Carpet ${carpetVersion}"
 			runGit(['commit', '-m', commitMessage])
+			releaseCommitCreated = true
 			runGit(['tag', '-a', tagName, '-m', "Release ${tagName}"])
 
 			println('')
 			println("已创建 release commit 和标签 ${tagName}。尚未推送到远端。")
 			println("推送命令: git push origin ${branch} --follow-tags")
 		} catch (Exception exception) {
+			if (!releaseCommitCreated) {
+				runGit(['restore', '--staged', '--', 'gradle.properties', 'CHANGELOG.md'], true)
+				restoreReleaseFiles()
+			}
 			println("发布操作在创建提交或标签时失败: ${exception.message}")
 			throw exception
 		}
