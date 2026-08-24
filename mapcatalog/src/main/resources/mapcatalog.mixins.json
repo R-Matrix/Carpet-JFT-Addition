@@ -4,6 +4,7 @@
   "package": "xyz.water.rmatrix.mapcatalog.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "MapStateMapCatalogMixin",
     "ServerWorldMapCatalogMixin"
   ],
   "injectors": {

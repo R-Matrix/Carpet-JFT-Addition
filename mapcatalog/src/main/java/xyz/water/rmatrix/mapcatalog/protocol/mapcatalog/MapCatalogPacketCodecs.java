@@ -14,12 +14,12 @@ import java.util.UUID;
 
 /** Codec definitions for the MapCatalog synchronization protocol. */
 public final class MapCatalogPacketCodecs {
-    public static final int PROTOCOL_VERSION = 1;
+    public static final int PROTOCOL_VERSION = 2;
     public static final int MAX_BATCH_ENTRIES = 256;
     private static final int MAX_BANNERS_PER_MAP = 256;
 
-    private static final PacketCodec<ByteBuf, Long> LONG_CODEC = PacketCodec.ofStatic(
-            (buf, value) -> buf.writeLong(value),
+    public static final PacketCodec<ByteBuf, Long> LONG_CODEC = PacketCodec.ofStatic(
+            ByteBuf::writeLong,
             ByteBuf::readLong
     );
 

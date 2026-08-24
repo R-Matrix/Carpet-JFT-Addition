@@ -33,12 +33,15 @@ public final class MapCatalogServerService {
     private static final String CARPET_JFT_MOD_ID = "carpetjftaddition";
     private static final String CARPET_JFT_ENTRYPOINT = "mapcatalog-carpet-jft";
     private static final Map<Integer, MapCatalogMapInfo> MAPS = new HashMap<>();
+    private static final Map<Integer, Long> MAP_REVISIONS = new HashMap<>();
+    private static final Map<MapState, Integer> MAP_IDS = new IdentityHashMap<>();
     private static final Map<UUID, Integer> LAST_REQUEST_TICKS = new HashMap<>();
 
     private static MinecraftServer server;
     private static UUID worldSessionId = new UUID(0L, 0L);
     private static MapCatalogConfig config = new MapCatalogConfig();
     private static int highestMapId = -1;
+    private static long catalogRevision;
     private static boolean initialized;
     private static boolean carpetJftEntrypointLookupAttempted;
     private static BooleanSupplier carpetJftMapSyncRule;
@@ -76,8 +79,11 @@ public final class MapCatalogServerService {
             return;
         }
         MAPS.clear();
+        MAP_REVISIONS.clear();
+        MAP_IDS.clear();
         LAST_REQUEST_TICKS.clear();
         highestMapId = -1;
+        catalogRevision = 0L;
         server = null;
         worldSessionId = new UUID(0L, 0L);
     }
@@ -86,14 +92,26 @@ public final class MapCatalogServerService {
         if (server == null || world.getServer() != server || mapId == null || mapState == null) {
             return;
         }
-        MapCatalogMapInfo mapInfo = mapcatalog$fromMapState(mapId.id(), mapState);
-        MAPS.put(mapInfo.mapId(), mapInfo);
-        highestMapId = Math.max(highestMapId, mapInfo.mapId());
+        mapcatalog$updateMapState(mapId.id(), mapState, true);
+    }
+
+    public static void mapcatalog$onMapStateBannerChanged(MapState mapState) {
+        if (server == null || mapState == null) {
+            return;
+        }
+
+        Integer mapId = MAP_IDS.get(mapState);
+        if (mapId != null) {
+            mapcatalog$updateMapState(mapId, mapState, true);
+        }
     }
 
     private static void mapcatalog$scanMaps(MinecraftServer minecraftServer) {
         MAPS.clear();
+        MAP_REVISIONS.clear();
+        MAP_IDS.clear();
         highestMapId = -1;
+        catalogRevision = 0L;
         Path dataDirectory = minecraftServer.getSavePath(WorldSavePath.ROOT).resolve("data");
         if (!Files.isDirectory(dataDirectory)) {
             return;
@@ -109,9 +127,7 @@ public final class MapCatalogServerService {
                         try {
                             MapState mapState = mapcatalog$getMapState(overworld, mapFile.mapId());
                             if (mapState != null) {
-                                MapCatalogMapInfo mapInfo = mapcatalog$fromMapState(mapFile.mapId(), mapState);
-                                MAPS.put(mapInfo.mapId(), mapInfo);
-                                highestMapId = Math.max(highestMapId, mapInfo.mapId());
+                                mapcatalog$updateMapState(mapFile.mapId(), mapState, false);
                             }
                         } catch (RuntimeException exception) {
                             MapCatalogServer.LOGGER.warn("无法加载地图文件 {}", mapFile.path(), exception);
@@ -169,6 +185,22 @@ public final class MapCatalogServerService {
         );
     }
 
+    private static void mapcatalog$updateMapState(int mapId, MapState mapState, boolean markChanged) {
+        MapCatalogMapInfo mapInfo = mapcatalog$fromMapState(mapId, mapState);
+        MapCatalogMapInfo previous = MAPS.put(mapId, mapInfo);
+        MAP_IDS.entrySet().removeIf(entry -> entry.getValue().equals(mapId) && entry.getKey() != mapState);
+        MAP_IDS.put(mapState, mapId);
+        highestMapId = Math.max(highestMapId, mapId);
+
+        if (!MAP_REVISIONS.containsKey(mapId)) {
+            MAP_REVISIONS.put(mapId, catalogRevision);
+        }
+        if (markChanged && !mapInfo.equals(previous)) {
+            catalogRevision++;
+            MAP_REVISIONS.put(mapId, catalogRevision);
+        }
+    }
+
     private static void mapcatalog$handleRequest(
             MapCatalogSyncRequestC2S payload,
             ServerPlayNetworking.Context context
@@ -205,7 +237,8 @@ public final class MapCatalogServerService {
                 currentConfig.mapcatalog$allowAllDimensions());
         if (!fullSync) {
             maps = maps.stream()
-                    .filter(map -> map.mapId() > payload.knownMaxMapId())
+                    .filter(map -> MAP_REVISIONS.getOrDefault(map.mapId(), 0L)
+                            > payload.knownCatalogRevision())
                     .toList();
         }
 
@@ -215,6 +248,7 @@ public final class MapCatalogServerService {
         ServerPlayNetworking.send(player, new MapCatalogSyncStartS2C(
                 mode,
                 worldSessionId,
+                catalogRevision,
                 highestMapId,
                 maps.size()
         ));
@@ -223,7 +257,8 @@ public final class MapCatalogServerService {
             int end = Math.min(start + currentConfig.mapcatalog$maxMapsPerSync(), maps.size());
             ServerPlayNetworking.send(player, new MapCatalogSyncBatchS2C(maps.subList(start, end)));
         }
-        ServerPlayNetworking.send(player, new MapCatalogSyncEndS2C(worldSessionId, highestMapId));
+        ServerPlayNetworking.send(player, new MapCatalogSyncEndS2C(
+                worldSessionId, catalogRevision, highestMapId));
     }
 
     private static void mapcatalog$sendDenied(ServerPlayerEntity player) {
@@ -231,6 +266,7 @@ public final class MapCatalogServerService {
             ServerPlayNetworking.send(player, new MapCatalogSyncStartS2C(
                     MapCatalogSyncMode.DENIED,
                     worldSessionId,
+                    catalogRevision,
                     highestMapId,
                     0
             ));
