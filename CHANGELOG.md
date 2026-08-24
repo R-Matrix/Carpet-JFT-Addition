@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
+## [0.0.16] - 2026-08-24
+
+## v0.0.16-mapcatalog 更新
+
+### Changed
+
+- MapCatalog 地图同步协议更新至 v2, 现在支持了对地图旗帜标识的更新.
+- 注意此协议与** v1 不兼容**
+
+
+---
+
+<!-- JFT_RELEASE_AUTO_APPEND -->
+
 ## [0.0.15] - 2026-08-24
 
 ### Changed
