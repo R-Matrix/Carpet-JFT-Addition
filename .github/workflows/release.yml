@@ -181,8 +181,8 @@ jobs:
                   count--
                 }
               }
-              for (index = 1; index <= count; index++) {
-                print lines[index]
+              for (lineNumber = 1; lineNumber <= count; lineNumber++) {
+                print lines[lineNumber]
               }
             }
           ' release-notes.md > release-notes-user.md
