@@ -1,4 +1,5 @@
 import java.nio.charset.StandardCharsets
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 def versionPattern = Pattern.compile('^[0-9]+\\.[0-9]+\\.[0-9]+$')
@@ -43,8 +44,10 @@ def nextPatchVersion = { String version ->
 	return "${parts[0]}.${parts[1]}.${Integer.parseInt(parts[2]) + 1}"
 }
 
-def makeChangelogEntry = { String version, String date ->
+def makeChangelogEntry = { String version, String tagName, String date ->
 	"""## [${version}] - ${date}
+
+## ${tagName} 更新
 
 ### Added
 
@@ -53,10 +56,14 @@ def makeChangelogEntry = { String version, String date ->
 ### Fixed
 
 ### Removed
+
+---
+
+<!-- JFT_RELEASE_AUTO_APPEND -->
 """
 }
 
-def insertChangelogEntry = { String original, String version, String date ->
+def insertChangelogEntry = { String original, String version, String tagName, String date ->
 	String newline = original.contains('\r\n') ? '\r\n' : '\n'
 	String normalized = original.replace('\r\n', '\n')
 	String releaseHeader = "## [${version}]"
@@ -66,7 +73,7 @@ def insertChangelogEntry = { String original, String version, String date ->
 		throw new GradleException("CHANGELOG.md 已经存在版本 ${version}，请检查后再发布。")
 	}
 
-	String entry = makeChangelogEntry(version, date)
+	String entry = makeChangelogEntry(version, tagName, date)
 	int firstReleaseStart = normalized.indexOf('\n## [')
 	String updated
 	if (firstReleaseStart < 0) {
@@ -105,6 +112,21 @@ def changelogEntryHasContent = { String content, String version ->
 	return false
 }
 
+def updateMapCatalogReadme = { String content, String tagName ->
+	String mapCatalogReleaseUrl = "https://github.com/R-Matrix/Carpet-JFT-Addition/releases/tag/${tagName}"
+	Pattern mapCatalogUrlPattern = Pattern.compile(
+		'https://github\\.com/R-Matrix/Carpet-JFT-Addition/releases/tag/v[0-9]+\\.[0-9]+\\.[0-9]+-mapcatalog'
+	)
+	def matcher = mapCatalogUrlPattern.matcher(content)
+	if (!matcher.find()) {
+		throw new GradleException('README.md 中没有找到 MapCatalog 发布链接，无法自动更新。')
+	}
+	if (matcher.find()) {
+		throw new GradleException('README.md 中找到多个 MapCatalog 发布链接，请手动整理后再发布。')
+	}
+	return mapCatalogUrlPattern.matcher(content).replaceFirst(Matcher.quoteReplacement(mapCatalogReleaseUrl))
+}
+
 tasks.register('jftRelease') {
 	group = 'release'
 	description = 'Interactively update release versions and create a release commit and tag'
@@ -112,10 +134,15 @@ tasks.register('jftRelease') {
 	doLast {
 		File propertiesFile = rootProject.file('gradle.properties')
 		File changelogFile = rootProject.file('CHANGELOG.md')
+		File readmeFile = rootProject.file('README.md')
 		String originalProperties = propertiesFile.getText(StandardCharsets.UTF_8.name())
 		boolean changelogExisted = changelogFile.exists()
 		String originalChangelog = changelogExisted
 			? changelogFile.getText(StandardCharsets.UTF_8.name())
+			: ''
+		boolean readmeExisted = readmeFile.exists()
+		String originalReadme = readmeExisted
+			? readmeFile.getText(StandardCharsets.UTF_8.name())
 			: ''
 		String currentCarpetVersion = readProperty(originalProperties, 'mod_version')
 		String currentMapCatalogVersion = readProperty(originalProperties, 'mapcatalog_version')
@@ -213,6 +240,13 @@ tasks.register('jftRelease') {
 					println('警告：无法删除新生成的 CHANGELOG.md，请手动恢复。')
 				}
 			}
+			if (readmeExisted) {
+				readmeFile.setText(originalReadme, StandardCharsets.UTF_8.name())
+			} else if (readmeFile.exists()) {
+				if (!readmeFile.delete()) {
+					println('警告：无法删除新生成的 README.md，请手动恢复。')
+				}
+			}
 		}
 		def openNotepad = { File file ->
 			if (!System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
@@ -273,11 +307,22 @@ tasks.register('jftRelease') {
 		String updatedChangelog = insertChangelogEntry(
 			originalChangelog,
 			carpetVersion,
+			tagName,
 			java.time.LocalDate.now().toString()
 		)
+		String updatedReadme = includeMapCatalog
+			? updateMapCatalogReadme(originalReadme, tagName)
+			: originalReadme
 		propertiesFile.setText(updatedProperties, StandardCharsets.UTF_8.name())
 		changelogFile.setText(updatedChangelog, StandardCharsets.UTF_8.name())
+		if (includeMapCatalog) {
+			readmeFile.setText(updatedReadme, StandardCharsets.UTF_8.name())
+		}
 		boolean releaseCommitCreated = false
+		List<String> releaseFiles = ['gradle.properties', 'CHANGELOG.md']
+		if (includeMapCatalog) {
+			releaseFiles.add('README.md')
+		}
 
 		try {
 			println('')
@@ -306,16 +351,17 @@ tasks.register('jftRelease') {
 			println("Carpet JFT Addition: ${currentCarpetVersion} -> ${carpetVersion}")
 			if (includeMapCatalog) {
 				println("MapCatalog: ${currentMapCatalogVersion} -> ${mapCatalogVersion}")
+				println("README.md: 更新 MapCatalog 下载链接 -> https://github.com/R-Matrix/Carpet-JFT-Addition/releases/tag/${tagName}")
 			}
 			println('即将提交的变更:')
 			runGit(['diff', '--check'])
-			runGit(['add', '--', 'gradle.properties', 'CHANGELOG.md'])
-			println(runGit(['diff', '--cached', '--', 'gradle.properties', 'CHANGELOG.md']).stdout)
+			runGit(['add', '--'] + releaseFiles)
+			println(runGit(['diff', '--cached', '--'] + releaseFiles).stdout)
 
 			if (!askYesNo('确认创建 release commit 和 tag?', false)) {
-				runGit(['restore', '--staged', '--', 'gradle.properties', 'CHANGELOG.md'], true)
+				runGit(['restore', '--staged', '--'] + releaseFiles, true)
 				restoreReleaseFiles()
-				println('发布操作已取消，版本文件和 CHANGELOG.md 已恢复。')
+				println('发布操作已取消，版本文件、CHANGELOG.md 和 README.md 已恢复。')
 				return
 			}
 
@@ -331,7 +377,7 @@ tasks.register('jftRelease') {
 			println("推送命令: git push origin ${branch} --follow-tags")
 		} catch (Exception exception) {
 			if (!releaseCommitCreated) {
-				runGit(['restore', '--staged', '--', 'gradle.properties', 'CHANGELOG.md'], true)
+				runGit(['restore', '--staged', '--'] + releaseFiles, true)
 				restoreReleaseFiles()
 			}
 			println("发布操作在创建提交或标签时失败: ${exception.message}")
