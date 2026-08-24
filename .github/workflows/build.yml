@@ -255,7 +255,7 @@ jobs:
             !**/*-shadow.jar
           if-no-files-found: error
       - name: upload MapCatalog artifacts
-        if: ${{ inputs.module == 'mapcatalog' }}
+        if: ${{ inputs.module == 'mapcatalog' && (inputs.release || steps.mapcatalog_cache.outputs.cache-hit != 'true') }}
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-mapcatalog
